@@ -11,6 +11,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Tickets</title>
+   <%-- 
+    para borrar
+    --%>
     <script>
         // Redirección automática al login
         window.location.href = "${pageContext.request.contextPath}/login";
