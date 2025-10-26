@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="4.0" xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
-                             http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
-    
+<web-app version="4.0" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee                               http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
     <display-name>Ticket Management System</display-name>
-    
     <!-- Configurar login.jsp como página welcome -->
     <welcome-file-list>
         <welcome-file>views/login.jsp</welcome-file>
     </welcome-file-list>
-    
     <!-- ========== CONFIGURACIÓN DE SERVLETS ========== -->
-    
     <!-- LoginServlet -->
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
@@ -22,7 +15,6 @@
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
-    
     <!-- DashboardServlet -->
     <servlet>
         <servlet-name>DashboardServlet</servlet-name>
@@ -32,17 +24,15 @@
         <servlet-name>DashboardServlet</servlet-name>
         <url-pattern>/dashboard</url-pattern>
     </servlet-mapping>
-    
     <!-- NuevoTicketServlet -->
     <servlet>
-        <servlet-name>NuevoTicketServlet</servlet-name>
-        <servlet-class>com.ticketsystem.servlets.NuevoTicketServlet</servlet-class>
+        <servlet-name>IncidenciaServlet</servlet-name>
+        <servlet-class>com.ticketsystem.servlets.IncidenciaServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>NuevoTicketServlet</servlet-name>
-        <url-pattern>/nuevo-ticket</url-pattern>
+        <servlet-name>IncidenciaServlet</servlet-name>
+        <url-pattern>/IncidenciaServlet</url-pattern>
     </servlet-mapping>
-    
     <!-- MisTicketsServlet -->
     <servlet>
         <servlet-name>MisTicketsServlet</servlet-name>
@@ -52,7 +42,6 @@
         <servlet-name>MisTicketsServlet</servlet-name>
         <url-pattern>/mis-tickets</url-pattern>
     </servlet-mapping>
-    
     <!-- ConfiguracionServlet -->
     <servlet>
         <servlet-name>ConfiguracionServlet</servlet-name>
@@ -62,7 +51,6 @@
         <servlet-name>ConfiguracionServlet</servlet-name>
         <url-pattern>/configuracion</url-pattern>
     </servlet-mapping>
-    
     <!-- LogoutServlet -->
     <servlet>
         <servlet-name>LogoutServlet</servlet-name>
@@ -72,10 +60,8 @@
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
-    
     <!-- Configuración de sesión -->
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
-    
 </web-app>

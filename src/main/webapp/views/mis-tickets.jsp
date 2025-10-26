@@ -23,23 +23,7 @@
                 <h2>HP Soporte BCP</h2>
                 <p>Sistema de Tickets</p>
             </div>
-            <nav class="sidebar-nav">
-                <a href="${pageContext.request.contextPath}/dashboard" class="nav-item">
-                    <span>📊</span> Panel de Control
-                </a>
-                <a href="${pageContext.request.contextPath}/nuevo-ticket" class="nav-item">
-                    <span>➕</span> Nuevo Ticket
-                </a>
-                <a href="${pageContext.request.contextPath}/mis-tickets" class="nav-item active">
-                    <span>🎫</span> Mis Tickets
-                </a>
-                <a href="${pageContext.request.contextPath}/configuracion" class="nav-item">
-                    <span>⚙️</span> Configuración
-                </a>
-                <a href="${pageContext.request.contextPath}/logout" class="nav-item">
-                    <span>🚪</span> Cerrar Sesión
-                </a>
-            </nav>
+ 
         </div>
 
         <!-- Main Content -->

@@ -1,0 +1,6 @@
+com.ticketsystem
+com.ticketsystem.dao
+com.ticketsystem.model
+com.ticketsystem.resources
+com.ticketsystem.servlets
+com.ticketsystem.util

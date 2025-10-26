@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.ticketsystem"},{"l":"com.ticketsystem.dao"},{"l":"com.ticketsystem.model"},{"l":"com.ticketsystem.resources"},{"l":"com.ticketsystem.servlets"},{"l":"com.ticketsystem.util"}];updateSearchResults();

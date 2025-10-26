@@ -15,31 +15,10 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css">
     </head>
     <body>
-        <div class="dashboard-container">
-            <!-- Sidebar -->
-            <div class="sidebar">
-                <div class="sidebar-header">
-                    <h2>HP Soporte BCP</h2>
-                    <p>Sistema de Tickets</p>
-                </div>
-                <nav class="sidebar-nav">
-                    <a href="${pageContext.request.contextPath}/dashboard" class="nav-item active">
-                        <span>📊</span> Dashboard
-                    </a>
-                    <a href="${pageContext.request.contextPath}/nuevo-ticket" class="nav-item">
-                        <span>➕</span> Nuevo Ticket
-                    </a>
-                    <a href="${pageContext.request.contextPath}/mis-tickets" class="nav-item">
-                        <span>🎫</span> Mis Tickets
-                    </a>
-                    <a href="${pageContext.request.contextPath}/configuracion" class="nav-item">
-                        <span>⚙️</span> Configuración
-                    </a>
-                    <a href="${pageContext.request.contextPath}/logout" class="nav-item">
-                        <span>🚪</span> Cerrar Sesión
-                    </a>
-                </nav>
-            </div>
+       <div class="dashboard-container">
+    <div class="sidebar">
+        <jsp:include page="/views/menu.jsp" />
+    </div>
 
             <!-- Main Content -->
             <div class="main-content">
