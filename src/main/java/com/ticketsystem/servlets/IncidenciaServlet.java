@@ -8,7 +8,7 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/incidencia")
+@WebServlet("/IncidenciaServlet")
 public class IncidenciaServlet extends HttpServlet {
 
     private IncidenciaDAO dao = new IncidenciaDAO();
@@ -27,18 +27,18 @@ public class IncidenciaServlet extends HttpServlet {
         int pagina = 1;
         try { pagina = Integer.parseInt(request.getParameter("pagina")); } catch (Exception e) {}
 
-        // Editar
+        // Editar incidencia
         if ("edit".equals(action)) {
             int id = Integer.parseInt(request.getParameter("id"));
             Incidencia incidenciaEdit = dao.obtenerPorId(id);
             request.setAttribute("incidenciaEdit", incidenciaEdit);
         }
 
-        // Eliminar
+        // Eliminar incidencia
         if ("delete".equals(action)) {
             int id = Integer.parseInt(request.getParameter("id"));
             dao.eliminar(id);
-            response.sendRedirect("incidencia");
+            response.sendRedirect("IncidenciaServlet");
             return;
         }
 
@@ -49,7 +49,7 @@ public class IncidenciaServlet extends HttpServlet {
 
         // Listado con paginación
         int totalRegistros = dao.contarRegistros(search);
-        int totalPaginas = (int)Math.ceil(totalRegistros * 1.0 / REGISTROS_POR_PAGINA);
+        int totalPaginas = (int) Math.ceil(totalRegistros * 1.0 / REGISTROS_POR_PAGINA);
         int offset = (pagina - 1) * REGISTROS_POR_PAGINA;
         List<Incidencia> lista = dao.listar(search, offset, REGISTROS_POR_PAGINA);
 
@@ -57,6 +57,9 @@ public class IncidenciaServlet extends HttpServlet {
         request.setAttribute("totalPaginas", totalPaginas);
         request.setAttribute("paginaActual", pagina);
         request.setAttribute("search", search);
+
+        // Para menú activo
+        request.setAttribute("page", "incidencias");
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/views/incidencia.jsp");
         dispatcher.forward(request, response);
@@ -87,6 +90,6 @@ public class IncidenciaServlet extends HttpServlet {
             dao.actualizar(i);
         }
 
-        response.sendRedirect("incidencia");
+        response.sendRedirect("IncidenciaServlet");
     }
 }

@@ -1,38 +1,46 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<!-- Enlaces CSS -->
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
 <!-- Sidebar del panel -->
 <div class="sidebar">
     <div class="logo">
-        <img src="${pageContext.request.contextPath}/img/logo.png" alt="Logo" class="logo-img">
+      <!--  <img src="${pageContext.request.contextPath}/img/logo.png" alt="Logo" class="logo-img"> -->
         <p class="logo-text">Sistema de Tickets</p>
     </div>
 
     <nav>
-        <ul>
-            <li><a href="${pageContext.request.contextPath}/views/dashboard.jsp" class="${page == 'dashboard' ? 'active' : ''}">
-                <i class="fa-solid fa-chart-line"></i> Panel de control
-            </a></li>
+       <ul>
+   <li>
+    <a href="${pageContext.request.contextPath}/dashboard" class="${page == 'dashboard' ? 'active' : ''}">
+        <i class="fa-solid fa-chart-line"></i> Dashboard
+    </a>
+</li>
 
-            <li><a href="${pageContext.request.contextPath}/UsuariosServlet?action=list" class="${page == 'usuarios' ? 'active' : ''}">
-                <i class="fa-solid fa-users"></i> Usuarios
-            </a></li>
+<li>
+    <a href="${pageContext.request.contextPath}/UsuariosServlet?action=list" class="${page == 'usuarios' ? 'active' : ''}">
+        <i class="fa-solid fa-users"></i> Usuarios
+    </a>
+</li>
 
-            <li><a href="${pageContext.request.contextPath}/EquiposServlet?action=list" class="${page == 'equipos' ? 'active' : ''}">
-                <i class="fa-solid fa-desktop"></i> Equipos
-            </a></li>
+<li>
+    <a href="${pageContext.request.contextPath}/EquiposServlet?action=list" class="${page == 'equipos' ? 'active' : ''}">
+        <i class="fa-solid fa-desktop"></i> Equipos
+    </a>
+</li>
 
-            <li><a href="${pageContext.request.contextPath}/TecnicosServlet?action=list" class="${page == 'tecnicos' ? 'active' : ''}">
-                <i class="fa-solid fa-user-gear"></i> Técnicos
-            </a></li>
+<li>
+    <a href="${pageContext.request.contextPath}/TecnicosServlet?action=list" class="${page == 'tecnicos' ? 'active' : ''}">
+        <i class="fa-solid fa-user-gear"></i> Técnicos
+    </a>
+</li>
 
-            <li><a href="${pageContext.request.contextPath}/IncidenciaServlet?action=list" class="${page == 'incidencias' ? 'active' : ''}">
-                <i class="fa-solid fa-ticket-alt"></i> Incidencias
-            </a></li>
-        </ul>
+<li>
+    <a href="${pageContext.request.contextPath}/IncidenciaServlet?action=list" class="${page == 'incidencias' ? 'active' : ''}">
+        <i class="fa-solid fa-ticket-alt"></i> Incidencias
+    </a>
+</li>
+
+</ul>
+
     </nav>
 
     <div class="logout" onclick="location.href='${pageContext.request.contextPath}/LogoutServlet'">
