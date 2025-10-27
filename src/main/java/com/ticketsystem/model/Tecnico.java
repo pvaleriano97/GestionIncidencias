@@ -1,0 +1,45 @@
+
+package com.ticketsystem.model;
+
+/**
+ *
+ * @author ROSA SANDOVAL
+ */
+public class Tecnico {
+    private int idTecnico;
+    private String nombre;
+    private String especialidad;
+ 
+    private int ticketsCerrados;
+    // Getters y Setters
+    public int getIdTecnico() {
+        return idTecnico;
+    }
+    public void setIdTecnico(int idTecnico) {
+        this.idTecnico = idTecnico;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getEspecialidad() {
+        return especialidad;
+    }
+    public void setEspecialidad(String especialidad) {
+        this.especialidad = especialidad;
+    }
+    
+
+    public int getTicketsCerrados() {
+        return ticketsCerrados;
+    }
+
+    public void setTicketsCerrados(int ticketsCerrados) {
+        this.ticketsCerrados = ticketsCerrados;
+    }
+    
+}
