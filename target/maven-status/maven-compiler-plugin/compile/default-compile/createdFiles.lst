@@ -1,4 +1,5 @@
 com\ticketsystem\model\Tecnico.class
+com\ticketsystem\dao\IEquipoDAO.class
 com\ticketsystem\servlets\IncidenciaServlet.class
 com\ticketsystem\model\Incidencia.class
 com\ticketsystem\util\DatabaseConnection.class
