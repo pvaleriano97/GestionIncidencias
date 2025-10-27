@@ -9,7 +9,7 @@ public class Tecnico {
     private int idTecnico;
     private String nombre;
     private String especialidad;
- 
+  private int Disponibilidad;
     private int ticketsCerrados;
     // Getters y Setters
     public int getIdTecnico() {
@@ -41,5 +41,14 @@ public class Tecnico {
     public void setTicketsCerrados(int ticketsCerrados) {
         this.ticketsCerrados = ticketsCerrados;
     }
-    
+
+    public int getDisponibilidad() {
+        return Disponibilidad;
+    }
+
+    public void setDisponibilidad(int Disponibilidad) {
+        this.Disponibilidad = Disponibilidad;
+    }
+
+ 
 }
