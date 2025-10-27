@@ -1,6 +1,5 @@
 package com.ticketsystem.servlets;
 
-import com.google.gson.Gson;
 import com.ticketsystem.dao.EquipoDAO;
 import com.ticketsystem.dao.IEquipoDAO;
 import com.ticketsystem.model.Equipo;
@@ -9,112 +8,112 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-/**
- * @author ROSA
- */
 @WebServlet(name = "EquipoServlet", urlPatterns = {"/EquipoServlet"})
 public class EquipoServlet extends HttpServlet {
 
     private final IEquipoDAO equipoDAO = new EquipoDAO();
 
-    // ✅ Método GET: listar / buscar
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        response.setContentType("application/json;charset=UTF-8");
-        Gson gson = new Gson();
-        Map<String, Object> result = new HashMap<>();
-
         String action = request.getParameter("action");
-        if (action == null) action = "";
+        if (action == null) action = "listar";
 
         try {
             switch (action) {
-                case "listar":
-                    int page = Integer.parseInt(request.getParameter("page"));
-                    int size = Integer.parseInt(request.getParameter("size"));
-                    String filtro = request.getParameter("filtro");
-
-                    List<Equipo> lista = equipoDAO.listar(page, size, filtro);
-                    int total = equipoDAO.contar(filtro);
-
-                    result.put("data", lista);
-                    result.put("total", total);
+                case "edit":
+                    int idEdit = Integer.parseInt(request.getParameter("id"));
+                    Equipo equipoEdit = equipoDAO.buscarPorId(idEdit);
+                    request.setAttribute("equipoEdit", equipoEdit);
+                    listarEquipos(request, response);
                     break;
 
-                case "buscar":
-                    int id = Integer.parseInt(request.getParameter("id"));
-                    Equipo e = equipoDAO.buscarPorId(id);
-                    result.put("data", e);
+                case "delete":
+                    int idDel = Integer.parseInt(request.getParameter("id"));
+                    equipoDAO.eliminar(idDel);
+                    listarEquipos(request, response);
                     break;
 
                 default:
-                    result.put("error", "Acción no válida o vacía");
+                    listarEquipos(request, response);
                     break;
             }
+
         } catch (Exception ex) {
             ex.printStackTrace();
-            result.put("error", ex.getMessage());
+            request.setAttribute("error", ex.getMessage());
+            request.getRequestDispatcher("/views/error.jsp").forward(request, response);
         }
-
-        response.getWriter().write(gson.toJson(result));
     }
 
-    // ✅ Método POST: insertar / actualizar / eliminar
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        response.setContentType("application/json;charset=UTF-8");
-        Gson gson = new Gson();
-        Map<String, Object> result = new HashMap<>();
-
-        String action = request.getParameter("action");
-        if (action == null) action = "";
+        request.setCharacterEncoding("UTF-8");
+        String idEquipoStr = request.getParameter("idEquipo");
 
         try {
-            switch (action) {
-                case "insertar":
-                    Equipo nuevo = new Equipo();
-                    nuevo.setCodigoEquipo(request.getParameter("codigoEquipo"));
-                    nuevo.setTipo(request.getParameter("tipo"));
-                    nuevo.setEstado(request.getParameter("estado"));
-                    result.put("success", equipoDAO.insertar(nuevo));
-                    break;
+            Equipo equipo = new Equipo();
+            equipo.setCodigoEquipo(request.getParameter("codigoEquipo"));
+            equipo.setTipo(request.getParameter("tipo"));
+            equipo.setEstado(request.getParameter("estado"));
 
-                case "actualizar":
-                    Equipo act = new Equipo();
-                    act.setIdEquipo(Integer.parseInt(request.getParameter("idEquipo")));
-                    act.setCodigoEquipo(request.getParameter("codigoEquipo"));
-                    act.setTipo(request.getParameter("tipo"));
-                    act.setEstado(request.getParameter("estado"));
-                    result.put("success", equipoDAO.actualizar(act));
-                    break;
-
-                case "eliminar":
-                    int id = Integer.parseInt(request.getParameter("idEquipo"));
-                    result.put("success", equipoDAO.eliminar(id));
-                    break;
-
-                default:
-                    result.put("error", "Acción POST no válida o vacía");
-                    break;
+            if (idEquipoStr == null || idEquipoStr.isEmpty()) {
+                // Insertar nuevo
+                equipoDAO.insertar(equipo);
+            } else {
+                // Actualizar existente
+                equipo.setIdEquipo(Integer.parseInt(idEquipoStr));
+                equipoDAO.actualizar(equipo);
             }
+
+            listarEquipos(request, response);
+
         } catch (Exception ex) {
             ex.printStackTrace();
-            result.put("error", ex.getMessage());
+            request.setAttribute("error", ex.getMessage());
+            request.getRequestDispatcher("/views/error.jsp").forward(request, response);
         }
+    }
 
-        response.getWriter().write(gson.toJson(result));
+    // ✅ Método auxiliar para listar y paginar equipos
+    private void listarEquipos(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        try {
+            int pagina = 1;
+            int registrosPorPagina = 5;
+            String search = request.getParameter("search");
+            if (search == null) search = "";
+
+            if (request.getParameter("pagina") != null) {
+                pagina = Integer.parseInt(request.getParameter("pagina"));
+            }
+
+            List<Equipo> listaEquipos = equipoDAO.listar(pagina, registrosPorPagina, search);
+            int totalRegistros = equipoDAO.contar(search);
+            int totalPaginas = (int) Math.ceil(totalRegistros / (double) registrosPorPagina);
+
+            request.setAttribute("listaEquipos", listaEquipos);
+            request.setAttribute("paginaActual", pagina);
+            request.setAttribute("totalPaginas", totalPaginas);
+            request.setAttribute("search", search);
+
+            request.getRequestDispatcher("/views/equipo.jsp").forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", e.getMessage());
+            request.getRequestDispatcher("/views/error.jsp").forward(request, response);
+        }
     }
 
     @Override
     public String getServletInfo() {
-        return "Servlet para gestión de equipos (CRUD con JSON y AJAX)";
+        return "Servlet para gestión de Equipos con JSP y paginación";
     }
 }

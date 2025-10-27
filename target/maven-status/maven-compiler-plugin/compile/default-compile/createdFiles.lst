@@ -11,6 +11,7 @@ com\ticketsystem\servlets\LoginServlet.class
 com\ticketsystem\model\Usuario.class
 com\ticketsystem\dao\IncidenciaDAO.class
 com\ticketsystem\dao\TecnicoDAO.class
+com\ticketsystem\servlets\EquipoServlet.class
 com\ticketsystem\servlets\ConfiguracionServlet.class
 com\ticketsystem\dao\DashboardDAO.class
 com\ticketsystem\dao\UserDAO.class

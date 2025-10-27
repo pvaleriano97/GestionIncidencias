@@ -22,9 +22,9 @@
 </li>
 
 <li>
-    <a href="${pageContext.request.contextPath}/EquiposServlet?action=list" class="${page == 'equipos' ? 'active' : ''}">
-        <i class="fa-solid fa-desktop"></i> Equipos
-    </a>
+   <a href="${pageContext.request.contextPath}/EquipoServlet" class="nav-item">
+    <i class="fa-solid fa-laptop-code"></i> Equipos
+</a>
 </li>
 
 <li>
