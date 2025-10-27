@@ -1,8 +1,3 @@
-<%-- 
-    Document   : login
-    Created on : 12 oct 2025, 8:08:43 p.m.
-    Author     : acuar
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -11,60 +6,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - Sistema de Tickets</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+
+    <!-- CSS unificado -->
+    <link rel="stylesheet" href="<c:url value='/css/main.css'/>">
+
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
-<body>
+<body class="login-body">
     <div class="login-container">
         <div class="login-header">
             <h1>¡BIENVENIDO DE NUEVO!</h1>
             <p>Inicia sesión con tu correo corporativo</p>
         </div>
-        
-        <!-- Mostrar mensaje de logout exitoso -->
+
+        <!-- Mensajes -->
         <c:if test="${not empty mensaje}">
             <div class="alert alert-success">
-                <span>✅</span> ${mensaje}
+                ✅ ${mensaje}
             </div>
         </c:if>
-        
-        <!-- Mostrar error de login -->
         <c:if test="${not empty error}">
             <div class="error-message">
                 ${error}
             </div>
         </c:if>
-        
-        <form class="login-form" action="${pageContext.request.contextPath}/login" method="post">
+
+        <!-- Formulario -->
+        <form action="<c:url value='/login'/>" method="post">
             <div class="form-group">
                 <label for="correo">Correo electrónico*</label>
-                <input type="email" id="correo" name="correo" 
-                       value="${not empty correo ? correo : 'frocab@bcp.com.pe'}" required>
+                <input type="email" id="correo" name="correo"
+                       value="${not empty correo ? correo : ''}" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="contrasena">Contraseña*</label>
-                <input type="password" id="contrasena" name="contrasena" 
-                       value="${not empty correo ? '' : '@B123'}" required>
+                <input type="password" id="contrasena" name="contrasena" required>
             </div>
-            
+
             <div class="form-options">
                 <label class="checkbox-container">
-                    <input type="checkbox" id="rememberMe" name="rememberMe">
+                    <input type="checkbox" name="rememberMe">
                     <span class="checkmark"></span>
                     Mantener sesión iniciada
                 </label>
-                
                 <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
             </div>
-            
+
             <button type="submit" class="login-button">Ingresar</button>
         </form>
-        
+
         <div class="footer">
             <p>Designed by HP</p>
         </div>
     </div>
-    
-    <script src="${pageContext.request.contextPath}/js/script.js"></script>
+
+    <!-- JS opcional -->
+    <script src="<c:url value='/js/script.js'/>"></script>
 </body>
 </html>
