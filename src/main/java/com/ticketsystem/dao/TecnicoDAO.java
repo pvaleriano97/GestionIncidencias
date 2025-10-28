@@ -2,20 +2,22 @@ package com.ticketsystem.dao;
 
 import com.ticketsystem.model.Tecnico;
 import com.ticketsystem.util.DatabaseConnection;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TecnicoDAO implements ITecnicoDAO {
 
+    // ✅ Constructor vacío
     public TecnicoDAO() {}
 
-    // ✅ Listar con paginación y filtro
-
+    /**
+     * ✅ Listar técnicos con paginación y búsqueda
+     */
     public List<Tecnico> listar(int page, int size, String filtro) throws Exception {
         List<Tecnico> lista = new ArrayList<>();
-        String sql = "SELECT idTecnico, nombre, especialidad, disponibilidad " +
-                     "FROM tecnico " +
+        String sql = "SELECT idTecnico, nombre, especialidad, disponibilidad FROM tecnico " +
                      "WHERE nombre LIKE ? OR especialidad LIKE ? " +
                      "ORDER BY idTecnico DESC LIMIT ? OFFSET ?";
 
@@ -42,8 +44,9 @@ public class TecnicoDAO implements ITecnicoDAO {
         return lista;
     }
 
-    // ✅ Contar registros según filtro
- 
+    /**
+     * ✅ Contar registros filtrados (para paginación)
+     */
     public int contar(String filtro) throws Exception {
         String sql = "SELECT COUNT(*) FROM tecnico WHERE nombre LIKE ? OR especialidad LIKE ?";
         try (Connection c = DatabaseConnection.getConnection();
@@ -60,14 +63,16 @@ public class TecnicoDAO implements ITecnicoDAO {
         return 0;
     }
 
-    // ✅ Buscar técnico por ID
-  
+    /**
+     * ✅ Buscar técnico por ID
+     */
     public Tecnico buscarPorId(int id) throws Exception {
         String sql = "SELECT idTecnico, nombre, especialidad, disponibilidad FROM tecnico WHERE idTecnico = ?";
         try (Connection c = DatabaseConnection.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
 
             ps.setInt(1, id);
+
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     Tecnico t = new Tecnico();
@@ -82,8 +87,9 @@ public class TecnicoDAO implements ITecnicoDAO {
         return null;
     }
 
-    // ✅ Insertar (usa procedimiento almacenado)
-
+    /**
+     * ✅ Insertar técnico (usando procedimiento almacenado)
+     */
     public boolean insertar(Tecnico t) throws Exception {
         String sql = "CALL sp_insertar_tecnico(?, ?, ?)";
         try (Connection c = DatabaseConnection.getConnection();
@@ -96,8 +102,9 @@ public class TecnicoDAO implements ITecnicoDAO {
         }
     }
 
-    // ✅ Actualizar (usa procedimiento almacenado)
-   
+    /**
+     * ✅ Actualizar técnico (usando procedimiento almacenado)
+     */
     public boolean actualizar(Tecnico t) throws Exception {
         String sql = "CALL sp_actualizar_tecnico(?, ?, ?, ?)";
         try (Connection c = DatabaseConnection.getConnection();
@@ -111,8 +118,9 @@ public class TecnicoDAO implements ITecnicoDAO {
         }
     }
 
-    // ✅ Eliminar (usa procedimiento almacenado)
-   
+    /**
+     * ✅ Eliminar técnico (usando procedimiento almacenado)
+     */
     public boolean eliminar(int id) throws Exception {
         String sql = "CALL sp_eliminar_tecnico(?)";
         try (Connection c = DatabaseConnection.getConnection();
@@ -123,8 +131,9 @@ public class TecnicoDAO implements ITecnicoDAO {
         }
     }
 
-    // ✅ Listar simple (sin paginación)
- 
+    /**
+     * ✅ Listar todos (para combos o selects sin paginación)
+     */
     public List<Tecnico> listar() {
         List<Tecnico> lista = new ArrayList<>();
         String sql = "SELECT idTecnico, nombre, especialidad, disponibilidad FROM tecnico ORDER BY nombre";

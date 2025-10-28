@@ -21,17 +21,16 @@
 
         <!-- Formulario -->
         <div class="form-container">
-            <h2>Gestión de Técnicos</h2>
+            <h3>Gestión de Técnicos</h3>
 
             <form class="tecnico-form" action="<c:url value='/TecnicoServlet'/>" method="post">
                 <input type="hidden" name="idTecnico" value="${tecnicoEdit != null ? tecnicoEdit.idTecnico : ''}" />
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Nombre</label>
+                        <label>Nombre del Técnico</label>
                         <input type="text" name="nombre" required value="${tecnicoEdit != null ? tecnicoEdit.nombre : ''}">
                     </div>
-
                     <div class="form-group">
                         <label>Especialidad</label>
                         <input type="text" name="especialidad" required value="${tecnicoEdit != null ? tecnicoEdit.especialidad : ''}">
@@ -43,7 +42,7 @@
                     <select name="disponibilidad" required>
                         <option value="">--Seleccione--</option>
                         <option value="1" ${tecnicoEdit != null && tecnicoEdit.disponibilidad == 1 ? 'selected' : ''}>Disponible</option>
-                        <option value="0" ${tecnicoEdit != null && tecnicoEdit.disponibilidad == 0 ? 'selected' : ''}>No Disponible</option>
+                        <option value="0" ${tecnicoEdit != null && tecnicoEdit.disponibilidad == 0 ? 'selected' : ''}>No disponible</option>
                     </select>
                 </div>
 
@@ -54,12 +53,12 @@
             </form>
         </div>
 
-        <!-- Buscar técnico -->
+        <!-- Buscar -->
         <div class="search-container">
             <input type="text" id="searchInput" class="search-input" placeholder="Buscar por nombre o especialidad..." value="${search}">
         </div>
 
-        <!-- Tabla de técnicos -->
+        <!-- Tabla -->
         <table class="ticket-table">
             <thead>
                 <tr>
@@ -79,10 +78,10 @@
                         <td>
                             <c:choose>
                                 <c:when test="${t.disponibilidad == 1}">
-                                    <span style="color:green;">Disponible</span>
+                                    <span class="status success">Disponible</span>
                                 </c:when>
                                 <c:otherwise>
-                                    <span style="color:red;">No Disponible</span>
+                                    <span class="status danger">No disponible</span>
                                 </c:otherwise>
                             </c:choose>
                         </td>
@@ -100,17 +99,16 @@
             </tbody>
         </table>
 
-        <!-- Paginación centrada -->
+        <!-- Paginación -->
         <div class="pagination">
             <c:forEach var="i" begin="1" end="${totalPaginas}">
-                <a href="<c:url value='/TecnicoServlet?pagina=${i}&search=${search}'/>"
+                <a href="<c:url value='/TecnicoServlet?pagina=${i}&search=${search}'/>" 
                    class="${i == paginaActual ? 'active' : ''}">${i}</a>
             </c:forEach>
         </div>
     </div>
 </div>
 
-<!-- Script para búsqueda en tiempo real -->
 <script>
     const searchInput = document.getElementById('searchInput');
     searchInput.addEventListener('keyup', function() {

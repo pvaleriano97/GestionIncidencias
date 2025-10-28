@@ -5,7 +5,6 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Gestión de Incidencias</title>
     <link rel="stylesheet" href="<c:url value='/css/main.css'/>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -21,9 +20,7 @@
 
         <!-- Contenedor del formulario -->
         <div class="form-container">
-            <h2>Gestión de Incidencias</h2>
-
-            <form class="incidencia-form" action="<c:url value='/IncidenciaServlet'/>" method="post">
+                  <form class="incidencia-form" action="<c:url value='/IncidenciaServlet'/>" method="post">
                 <input type="hidden" name="idIncidencia" value="${incidenciaEdit != null ? incidenciaEdit.idIncidencia : ''}" />
 
                 <div class="form-group">

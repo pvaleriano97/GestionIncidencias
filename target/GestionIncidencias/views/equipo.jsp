@@ -21,7 +21,7 @@
 
         <!-- Contenedor del formulario -->
         <div class="form-container">
-            <h2>Gestión de Equipos</h2>
+            <h3>Gestión de Equipos</h3>
 
             <form class="equipo-form" action="<c:url value='/EquipoServlet'/>" method="post">
                 <input type="hidden" name="idEquipo" value="${equipoEdit != null ? equipoEdit.idEquipo : ''}" />
