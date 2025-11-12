@@ -1,10 +1,6 @@
 
 package com.ticketsystem.model;
 
-/**
- *
- * @author ROSA SANDOVAL
- */
 public class Equipo {
     private int idEquipo;
     private String codigoEquipo;
