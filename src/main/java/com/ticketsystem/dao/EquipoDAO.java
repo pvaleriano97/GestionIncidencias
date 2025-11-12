@@ -118,25 +118,25 @@ public class EquipoDAO implements IEquipoDAO {
     /**
      * Método adicional para combos o listados simples sin paginación.
      */
-    public List<Equipo> listar() {
-        List<Equipo> lista = new ArrayList<>();
-        String sql = "SELECT idEquipo, codigoEquipo, tipo, estado FROM equipo ORDER BY codigoEquipo";
+public List<Equipo> listar() {
+    List<Equipo> lista = new ArrayList<>();
+    String sql = "SELECT idEquipo, codigoEquipo, tipo, estado FROM equipo ORDER BY codigoEquipo";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
 
-            while (rs.next()) {
-                Equipo e = new Equipo();
-                e.setIdEquipo(rs.getInt("idEquipo"));
-                e.setCodigoEquipo(rs.getString("codigoEquipo"));
-                e.setTipo(rs.getString("tipo"));
-                e.setEstado(rs.getString("estado"));
-                lista.add(e);
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        while (rs.next()) {
+            Equipo e = new Equipo(); // este es mi código
+            e.setIdEquipo(rs.getInt("idEquipo"));
+            e.setCodigoEquipo(rs.getString("codigoEquipo"));
+            e.setTipo(rs.getString("tipo"));
+            e.setEstado(rs.getString("estado"));
+            lista.add(e);
         }
-        return lista;
+    } catch (SQLException ex) {
+        ex.printStackTrace();
     }
+    return lista;
+}
 }

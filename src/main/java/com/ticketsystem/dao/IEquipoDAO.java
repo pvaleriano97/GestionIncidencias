@@ -34,4 +34,6 @@ public interface IEquipoDAO {
      * Elimina un equipo por su ID.
      */
     boolean eliminar(int id) throws Exception;
+    
+      List<Equipo> listar();  
 }
