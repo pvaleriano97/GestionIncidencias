@@ -1,13 +1,25 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.ticketsystem.model;
 
-/**
- *
- * @author ROSA SANDOVAL
- */
+import java.math.BigDecimal;
 public class Repuesto {
+    private int idRepuesto;
+    private String nombre;
+    private int stock;
+    private BigDecimal costo;
     
+    // Constructor, Getters y Setters
+    public Repuesto() {}
+
+    public int getIdRepuesto() { return idRepuesto; }
+    public void setIdRepuesto(int idRepuesto) { this.idRepuesto = idRepuesto; }
+
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+
+    public int getStock() { return stock; }
+    public void setStock(int stock) { this.stock = stock; }
+
+    public BigDecimal getCosto() { return costo; }
+    public void setCosto(BigDecimal costo) { this.costo = costo; }
 }
