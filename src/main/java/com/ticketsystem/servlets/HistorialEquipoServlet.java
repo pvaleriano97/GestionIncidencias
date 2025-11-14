@@ -21,31 +21,31 @@ public class HistorialEquipoServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String action = request.getParameter("action");
-        if (action == null) action = "listar";
+     String action = request.getParameter("action");
+    if (action == null) action = "listar";
 
-        try {
-            switch (action) {
-                case "edit":
-                    int idEdit = Integer.parseInt(request.getParameter("id"));
-                    HistorialEquipo historialEdit = historialDAO.buscarPorId(idEdit);
-                    request.setAttribute("historialEdit", historialEdit);
-                    listar(request, response);
-                    break;
-                case "delete":
-                    int idDel = Integer.parseInt(request.getParameter("id"));
-                    historialDAO.eliminar(idDel);
-                    listar(request, response);
-                    break;
-                default:
-                    listar(request, response);
-                    break;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("error", e.getMessage());
-            request.getRequestDispatcher("/views/error.jsp").forward(request, response);
+    try {
+        switch (action) {
+            case "edit":
+                int idEdit = Integer.parseInt(request.getParameter("id"));
+                HistorialEquipo historialEdit = historialDAO.buscarPorId(idEdit);
+                request.setAttribute("historialEdit", historialEdit);
+                listar(request, response);
+                return; // ✅ muy importante
+            case "delete":
+                int idDel = Integer.parseInt(request.getParameter("id"));
+                historialDAO.eliminar(idDel);
+                listar(request, response);
+                return;
+            default:
+                listar(request, response);
+                return;
         }
+    } catch (Exception e) {
+        e.printStackTrace();
+        request.setAttribute("error", e.getMessage());
+        request.getRequestDispatcher("/views/error.jsp").forward(request, response);
+    }
     }
 
     @Override
@@ -77,7 +77,7 @@ public class HistorialEquipoServlet extends HttpServlet {
 
    private void listar(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
-    try {
+     try {
         int pagina = 1, registros = 5;
         String search = request.getParameter("search");
         if (search == null) search = "";
@@ -88,7 +88,6 @@ public class HistorialEquipoServlet extends HttpServlet {
         int total = historialDAO.contar(search);
         int totalPaginas = (int) Math.ceil(total / (double) registros);
 
-          IEquipoDAO equipoDAO = new EquipoDAO();
         request.setAttribute("listaEquipos", equipoDAO.listar());
         request.setAttribute("listaHistorial", lista);
         request.setAttribute("paginaActual", pagina);
@@ -102,4 +101,4 @@ public class HistorialEquipoServlet extends HttpServlet {
         request.setAttribute("error", e.getMessage());
         request.getRequestDispatcher("/views/error.jsp").forward(request, response);
     }
-}}
+  }  }
