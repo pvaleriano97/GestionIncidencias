@@ -13,35 +13,34 @@ public class IncidenciaDAO {
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     // Listar incidencias con búsqueda y paginación
+ 
+   
+
+    // Listar incidencias con búsqueda y paginación
     public List<Incidencia> listar(String search, int offset, int limit) {
         List<Incidencia> lista = new ArrayList<>();
         String sql = "SELECT i.idIncidencia, i.descripcion, i.estado, i.idUsuario, i.idEquipo, i.idTecnico, i.fechaRegistro, " +
-                     "u.nombre AS nombreUsuario, " +
-                     "e.codigoEquipo, e.tipo AS tipoEquipo, " +
-                     "t.nombre AS nombreTecnico " +
-                     "FROM incidencia i " +
-                     "LEFT JOIN usuario u ON i.idUsuario = u.idUsuario " +
-                     "LEFT JOIN equipo e ON i.idEquipo = e.idEquipo " +
-                     "LEFT JOIN tecnico t ON i.idTecnico = t.idTecnico " +
-                     "WHERE i.descripcion LIKE ? OR i.estado LIKE ? OR u.nombre LIKE ? OR e.codigoEquipo LIKE ? OR e.tipo LIKE ? OR t.nombre LIKE ? " +
-                     "ORDER BY i.fechaRegistro DESC " +
-                     "LIMIT ? OFFSET ?";
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
+                "u.nombre AS nombreUsuario, " +
+                "e.codigoEquipo, e.tipo AS tipoEquipo, " +
+                "t.nombre AS nombreTecnico " +
+                "FROM incidencia i " +
+                "LEFT JOIN usuario u ON i.idUsuario = u.idUsuario " +
+                "LEFT JOIN equipo e ON i.idEquipo = e.idEquipo " +
+                "LEFT JOIN tecnico t ON i.idTecnico = t.idTecnico " +
+                "WHERE i.descripcion LIKE ? OR i.estado LIKE ? OR u.nombre LIKE ? OR e.codigoEquipo LIKE ? OR e.tipo LIKE ? OR t.nombre LIKE ? " +
+                "ORDER BY i.fechaRegistro DESC " +
+                "LIMIT ? OFFSET ?";
+        try (Connection conn = DatabaseConnection.getConnection();PreparedStatement ps = conn.prepareStatement(sql)) {
             String filtro = "%" + search + "%";
             for (int i = 1; i <= 6; i++) ps.setString(i, filtro);
             ps.setInt(7, limit);
             ps.setInt(8, offset);
-
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Incidencia iObj = mapearIncidencia(rs);
                 lista.add(iObj);
             }
-
-        } catch (SQLException e) {
+        }catch (SQLException e) {
             e.printStackTrace();
         }
         return lista;
@@ -195,5 +194,26 @@ private Incidencia mapearIncidencia(ResultSet rs) throws SQLException {
     i.setTipoEquipo(rs.getString("tipoEquipo"));
     i.setNombreTecnico(rs.getString("nombreTecnico"));
     return i;
+}
+public List<Incidencia> listarSimple() {
+    List<Incidencia> lista = new ArrayList<>();
+    String sql = "SELECT idIncidencia, descripcion FROM incidencia ORDER BY idIncidencia DESC";
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+
+        while (rs.next()) {
+            Incidencia i = new Incidencia();
+            i.setIdIncidencia(rs.getInt("idIncidencia"));
+            i.setDescripcion(rs.getString("descripcion"));
+            lista.add(i);
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return lista;
 }
 }

@@ -7,91 +7,88 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HistorialEquipoDAO implements IHistorialEquipoDAO {
+public class HistorialEquipoDAO {
 
-    @Override
-    public boolean insertar(HistorialEquipo h) throws Exception {
-        String sql = "{ CALL sp_insertar_historial_equipo(?, ?) }";
+    // ================== INSERTAR ===================
+    public boolean insertar(HistorialEquipo h) {
+        String sql = "{CALL sp_insertar_historial_equipo(?, ?)}";
 
         try (Connection conn = DatabaseConnection.getConnection();
-             CallableStatement cs = conn.prepareCall(sql)) {
+             CallableStatement stmt = conn.prepareCall(sql)) {
 
-            cs.setInt(1, h.getIdEquipo());
-            cs.setString(2, h.getDetalle());
+            stmt.setInt(1, h.getIdEquipo());
+            stmt.setString(2, h.getDetalle());
 
-            return cs.executeUpdate() > 0;
-        }
+            return stmt.executeUpdate() > 0;
+
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
     }
 
-    @Override
-    public boolean actualizar(HistorialEquipo h) throws Exception {
-        String sql = "{ CALL sp_actualizar_historial_equipo(?, ?, ?) }";
+    // ================== ACTUALIZAR ===================
+    public boolean actualizar(HistorialEquipo h) {
+        String sql = "{CALL sp_actualizar_historial_equipo(?, ?, ?)}";
 
         try (Connection conn = DatabaseConnection.getConnection();
-             CallableStatement cs = conn.prepareCall(sql)) {
+             CallableStatement stmt = conn.prepareCall(sql)) {
 
-            cs.setInt(1, h.getIdHistorial());
-            cs.setInt(2, h.getIdEquipo());
-            cs.setString(3, h.getDetalle());
+            stmt.setInt(1, h.getIdHistorial());
+            stmt.setInt(2, h.getIdEquipo());
+            stmt.setString(3, h.getDetalle());
 
-            return cs.executeUpdate() > 0;
-        }
+            return stmt.executeUpdate() > 0;
+
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
     }
 
-    @Override
-    public boolean eliminar(int id) throws Exception {
-        String sql = "{ CALL sp_eliminar_historial_equipo(?) }";
+    // ================== ELIMINAR ===================
+    public boolean eliminar(int idHistorial) {
+        String sql = "{CALL sp_eliminar_historial_equipo(?)}";
 
         try (Connection conn = DatabaseConnection.getConnection();
-             CallableStatement cs = conn.prepareCall(sql)) {
+             CallableStatement stmt = conn.prepareCall(sql)) {
 
-            cs.setInt(1, id);
-            return cs.executeUpdate() > 0;
-        }
+            stmt.setInt(1, idHistorial);
+            return stmt.executeUpdate() > 0;
+
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
     }
 
-    @Override
-    public HistorialEquipo buscarPorId(int id) throws Exception {
-
-        String sql = "SELECT h.idHistorial, h.idEquipo, h.detalle, " +
-                     "e.codigoEquipo, e.tipo " +
-                     "FROM historialequipo h " +
-                     "JOIN equipo e ON h.idEquipo = e.idEquipo " +
-                     "WHERE h.idHistorial=?";
+    // ================== OBTENER POR ID ===================
+    public HistorialEquipo obtenerPorId(int id) {
+        HistorialEquipo h = null;
+        String sql = "{CALL sp_obtener_historial_equipo(?)}";
 
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+             CallableStatement stmt = conn.prepareCall(sql)) {
 
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                HistorialEquipo h = new HistorialEquipo();
+                h = new HistorialEquipo();
                 h.setIdHistorial(rs.getInt("idHistorial"));
                 h.setIdEquipo(rs.getInt("idEquipo"));
                 h.setDetalle(rs.getString("detalle"));
                 h.setCodigoEquipo(rs.getString("codigoEquipo"));
-                h.setTipoEquipo(rs.getString("tipo"));
-                return h;
+                h.setTipoEquipo(rs.getString("tipoEquipo"));
             }
-        }
-        return null;
+
+        } catch (Exception e) { e.printStackTrace(); }
+
+        return h;
     }
 
-    @Override
-    public List<HistorialEquipo> listar() throws Exception {
-
+    // ================== LISTAR ===================
+    public List<HistorialEquipo> listar() {
         List<HistorialEquipo> lista = new ArrayList<>();
-
-        String sql = "SELECT h.idHistorial, h.idEquipo, h.detalle, " +
-                     "e.codigoEquipo, e.tipo " +
-                     "FROM historialequipo h " +
-                     "JOIN equipo e ON h.idEquipo = e.idEquipo " +
-                     "ORDER BY h.idHistorial DESC";
+        String sql = "{CALL sp_listar_historial_equipo()}";
 
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+             CallableStatement stmt = conn.prepareCall(sql);
+             ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 HistorialEquipo h = new HistorialEquipo();
@@ -99,35 +96,13 @@ public class HistorialEquipoDAO implements IHistorialEquipoDAO {
                 h.setIdEquipo(rs.getInt("idEquipo"));
                 h.setDetalle(rs.getString("detalle"));
                 h.setCodigoEquipo(rs.getString("codigoEquipo"));
-                h.setTipoEquipo(rs.getString("tipo"));
+                h.setTipoEquipo(rs.getString("tipoEquipo"));
+
                 lista.add(h);
             }
-        }
-        return lista;
-    }
 
-    @Override
-    public List<HistorialEquipo> listarPorEquipo(int idEquipo) throws Exception {
+        } catch (Exception e) { e.printStackTrace(); }
 
-        List<HistorialEquipo> lista = new ArrayList<>();
-
-        String sql = "SELECT idHistorial, idEquipo, detalle " +
-                     "FROM historialequipo WHERE idEquipo=? ORDER BY idHistorial DESC";
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, idEquipo);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                HistorialEquipo h = new HistorialEquipo();
-                h.setIdHistorial(rs.getInt("idHistorial"));
-                h.setIdEquipo(rs.getInt("idEquipo"));
-                h.setDetalle(rs.getString("detalle"));
-                lista.add(h);
-            }
-        }
         return lista;
     }
 }

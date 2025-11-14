@@ -1,5 +1,4 @@
 C:\Users\rosav\Documents\NetBeansProjects\GestionIncidencias\src\main\java\com\ticketsystem\util\DatabaseConnection.java
-C:\Users\rosav\Documents\NetBeansProjects\GestionIncidencias\src\main\java\com\ticketsystem\dao\IHistorialEquipoDAO.java
 C:\Users\rosav\Documents\NetBeansProjects\GestionIncidencias\src\main\java\com\ticketsystem\dao\InformeTecnicoDAO.java
 C:\Users\rosav\Documents\NetBeansProjects\GestionIncidencias\src\main\java\com\ticketsystem\model\Usuario.java
 C:\Users\rosav\Documents\NetBeansProjects\GestionIncidencias\src\main\java\com\ticketsystem\servlets\LoginServlet.java
@@ -7,6 +6,7 @@ C:\Users\rosav\Documents\NetBeansProjects\GestionIncidencias\src\main\java\com\t
 C:\Users\rosav\Documents\NetBeansProjects\GestionIncidencias\src\main\java\com\ticketsystem\servlets\ConfiguracionServlet.java
 C:\Users\rosav\Documents\NetBeansProjects\GestionIncidencias\src\main\java\com\ticketsystem\servlets\LogoutServlet.java
 C:\Users\rosav\Documents\NetBeansProjects\GestionIncidencias\src\main\java\com\ticketsystem\JAXRSConfiguration.java
+C:\Users\rosav\Documents\NetBeansProjects\GestionIncidencias\src\main\java\com\ticketsystem\servlets\InformeTecnicoServlet.java
 C:\Users\rosav\Documents\NetBeansProjects\GestionIncidencias\src\main\java\com\ticketsystem\model\User.java
 C:\Users\rosav\Documents\NetBeansProjects\GestionIncidencias\src\main\java\com\ticketsystem\servlets\HistorialEquipoServlet.java
 C:\Users\rosav\Documents\NetBeansProjects\GestionIncidencias\src\main\java\com\ticketsystem\dao\EquipoDAO.java

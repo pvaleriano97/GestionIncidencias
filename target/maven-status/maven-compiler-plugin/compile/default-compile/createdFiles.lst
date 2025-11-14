@@ -5,14 +5,14 @@ com\ticketsystem\dao\ReportesDAO.class
 com\ticketsystem\model\Incidencia.class
 com\ticketsystem\model\User.class
 com\ticketsystem\dao\EquipoDAO.class
-com\ticketsystem\dao\IHistorialEquipoDAO.class
+com\ticketsystem\InformeTecnicoServlet.class
 com\ticketsystem\dao\IUsuarioDAO.class
 com\ticketsystem\servlets\UsuarioServlet.class
 com\ticketsystem\dao\SolicitudRepuestoDAO.class
 com\ticketsystem\servlets\TecnicoServlet.class
+com\ticketsystem\controller\HistorialEquipoServlet.class
 com\ticketsystem\dao\DashboardDAO.class
 com\ticketsystem\servlet\DashboardServlet.class
-com\ticketsystem\servlets\HistorialEquipoServlet.class
 com\ticketsystem\JAXRSConfiguration.class
 com\ticketsystem\servlets\LogoutServlet.class
 com\ticketsystem\dao\HistorialEquipoDAO.class
