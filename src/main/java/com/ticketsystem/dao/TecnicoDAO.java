@@ -9,11 +9,13 @@ import java.util.List;
 
 public class TecnicoDAO implements ITecnicoDAO {
 
-    // ✅ Constructor vacío
+    // Constructor vacío
     public TecnicoDAO() {}
 
     /**
-     * ✅ Listar técnicos con paginación y búsqueda
+     * ============================================================
+     *  LISTAR TÉCNICOS CON PAGINACIÓN + BÚSQUEDA
+     * ============================================================
      */
     public List<Tecnico> listar(int page, int size, String filtro) throws Exception {
         List<Tecnico> lista = new ArrayList<>();
@@ -45,7 +47,9 @@ public class TecnicoDAO implements ITecnicoDAO {
     }
 
     /**
-     * ✅ Contar registros filtrados (para paginación)
+     * ============================================================
+     *  CONTAR TÉCNICOS (para paginación)
+     * ============================================================
      */
     public int contar(String filtro) throws Exception {
         String sql = "SELECT COUNT(*) FROM tecnico WHERE nombre LIKE ? OR especialidad LIKE ?";
@@ -64,7 +68,9 @@ public class TecnicoDAO implements ITecnicoDAO {
     }
 
     /**
-     * ✅ Buscar técnico por ID
+     * ============================================================
+     *  BUSCAR TÉCNICO POR ID
+     * ============================================================
      */
     public Tecnico buscarPorId(int id) throws Exception {
         String sql = "SELECT idTecnico, nombre, especialidad, disponibilidad FROM tecnico WHERE idTecnico = ?";
@@ -88,7 +94,9 @@ public class TecnicoDAO implements ITecnicoDAO {
     }
 
     /**
-     * ✅ Insertar técnico (usando procedimiento almacenado)
+     * ============================================================
+     *  INSERTAR TÉCNICO (SP)
+     * ============================================================
      */
     public boolean insertar(Tecnico t) throws Exception {
         String sql = "CALL sp_insertar_tecnico(?, ?, ?)";
@@ -103,7 +111,9 @@ public class TecnicoDAO implements ITecnicoDAO {
     }
 
     /**
-     * ✅ Actualizar técnico (usando procedimiento almacenado)
+     * ============================================================
+     *  ACTUALIZAR TÉCNICO (SP)
+     * ============================================================
      */
     public boolean actualizar(Tecnico t) throws Exception {
         String sql = "CALL sp_actualizar_tecnico(?, ?, ?, ?)";
@@ -119,7 +129,9 @@ public class TecnicoDAO implements ITecnicoDAO {
     }
 
     /**
-     * ✅ Eliminar técnico (usando procedimiento almacenado)
+     * ============================================================
+     *  ELIMINAR TÉCNICO (SP)
+     * ============================================================
      */
     public boolean eliminar(int id) throws Exception {
         String sql = "CALL sp_eliminar_tecnico(?)";
@@ -132,7 +144,49 @@ public class TecnicoDAO implements ITecnicoDAO {
     }
 
     /**
-     * ✅ Listar todos (para combos o selects sin paginación)
+     * ============================================================
+     *  TOP TÉCNICOS (Dashboard Admin)
+     * ============================================================
+     */
+    public List<Tecnico> obtenerTopTecnicos(int limite) {
+        List<Tecnico> lista = new ArrayList<>();
+
+      String sql =
+    "SELECT t.idTecnico, t.nombre, t.especialidad, COUNT(i.idIncidencia) AS totalResueltas " +
+    "FROM tecnico t " +
+    "LEFT JOIN incidencia i ON t.idTecnico = i.idTecnico " +
+    "WHERE i.estado = 'Cerrado' " +
+    "GROUP BY t.idTecnico, t.nombre, t.especialidad " +
+    "ORDER BY totalResueltas DESC " +
+    "LIMIT ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, limite);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Tecnico t = new Tecnico();
+                    t.setIdTecnico(rs.getInt("idTecnico"));
+                    t.setNombre(rs.getString("nombre"));
+                    t.setEspecialidad(rs.getString("especialidad"));
+                    t.setTotalResueltas(rs.getInt("totalResueltas"));
+                    lista.add(t);
+                }
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return lista;
+    }
+
+    /**
+     * ============================================================
+     *  LISTAR TODOS (ComboBox, selects)
+     * ============================================================
      */
     public List<Tecnico> listar() {
         List<Tecnico> lista = new ArrayList<>();

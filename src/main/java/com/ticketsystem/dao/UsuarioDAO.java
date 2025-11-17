@@ -169,4 +169,34 @@ public class UsuarioDAO implements IUsuarioDAO {
         }
         return lista;
     }
+       public Usuario authenticate(String correo, String contrasena) {
+        String sql = "SELECT * FROM usuario WHERE correo=? AND contrasena=?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, correo);
+            ps.setString(2, contrasena); // ⚠️ Si usas hash, aplicar aquí
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Usuario u = new Usuario();
+                u.setIdUsuario(rs.getInt("idUsuario"));
+                u.setNombre(rs.getString("nombre"));
+                u.setApellido(rs.getString("apellido"));
+                u.setCorreo(rs.getString("correo"));
+                u.setContrasena(rs.getString("contrasena"));
+                u.setRol(rs.getString("rol"));
+                u.setArea(rs.getString("area"));
+                return u;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null; // usuario no encontrado o error
+    }
+
 }

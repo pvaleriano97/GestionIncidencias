@@ -1,80 +1,83 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<!-- Sidebar del panel -->
-<div class="sidebar">
-    <div class="logo">
-        <!-- <img src="${pageContext.request.contextPath}/img/logo.png" alt="Logo" class="logo-img"> -->
-        <p class="logo-text">Sistema de Tickets</p>
+<div class="sidebar" id="sidebar">
+
+    <div class="sidebar-header">
+        <h2 class="sidebar-title">Sistema de Tickets</h2>
     </div>
 
     <nav>
-        <ul>
+        <ul class="menu-list">
+
             <li>
-                <a href="${pageContext.request.contextPath}/dashboard"
-                   class="${page == 'dashboard' ? 'active' : ''}">
-                    <i class="fa-solid fa-chart-line"></i> Dashboard
+                <a href="${pageContext.request.contextPath}/dashboard">
+                    <i class="fa fa-chart-line"></i>
+                    <span>Dashboard</span>
                 </a>
             </li>
 
-            <li>
-                <a href="${pageContext.request.contextPath}/UsuarioServlet?action=list"
-                   class="${page == 'usuarios' ? 'active' : ''}">
-                    <i class="fa-solid fa-users"></i> Usuarios
+            <!-- ADMIN -->
+            <c:if test="${sessionScope.role == 'admin'}">
+               <li>
+                   <a href="${pageContext.request.contextPath}/UsuarioServlet"> <i class="fa-solid fa-desktop"></i>Gestionar Usuarios</a>
+                          </li>
+                  
+                     <li><a href="${pageContext.request.contextPath}/EquipoServlet">
+                    <i class="fa-solid fa-desktop"></i> Equipos </a>
+                </li>
+
+                <li><a href="${pageContext.request.contextPath}/TecnicoServlet">
+                    <i class="fa-solid fa-user-tie"></i> Técnicos </a>
+                </li>
+
+                <li><a href="${pageContext.request.contextPath}/RepuestoServlet">
+                    <i class="fa-solid fa-cogs"></i> Repuestos </a>
+                </li>
+                  <li>
+                    <a href="${pageContext.request.contextPath}/IncidenciaServlet">
+                        <i class="fa-solid fa-ticket"></i> Incidencias
+                    </a>
+                </li>
+
+                <li><a href="${pageContext.request.contextPath}/SolicitudRepuestoServlet">
+                    <i class="fa-solid fa-file-invoice"></i> Solicitudes </a>
+                </li>
+                <li>
+                    <a href="${pageContext.request.contextPath}/InformeTecnicoServlet">
+                        <i class="fa-solid fa-file-lines"></i> Informe Técnico
+                    </a>
+                </li>
+                
+            </c:if>
+
+            <!-- TECNICO -->
+            <c:if test="${sessionScope.role == 'tecnico'}">
+                <li>
+                    <a href="${pageContext.request.contextPath}/IncidenciaServlet">
+                        <i class="fa-solid fa-ticket"></i> Incidencias
+                    </a>
+                </li>
+
+                <li>
+                    <a href="${pageContext.request.contextPath}/HistorialEquipoServlet">
+                        <i class="fa-solid fa-history"></i> Historial Equipo
+                    </a>
+                </li>
+
+                <li>
+                    <a href="${pageContext.request.contextPath}/InformeTecnicoServlet">
+                        <i class="fa-solid fa-file-lines"></i> Informe Técnico
+                    </a>
+                </li>
+            </c:if>
+
+            <li class="logout">
+                <a href="${pageContext.request.contextPath}/LogoutServlet">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Cerrar sesión</span>
                 </a>
             </li>
 
-            <li>
-                <a href="${pageContext.request.contextPath}/EquipoServlet?action=list"
-                   class="${page == 'equipos' ? 'active' : ''}">
-                    <i class="fa-solid fa-laptop-code"></i> Equipos
-                </a>
-            </li>
-
-            <li>
-                <a href="${pageContext.request.contextPath}/TecnicoServlet?action=list"
-                   class="${page == 'tecnicos' ? 'active' : ''}">
-                    <i class="fa-solid fa-user-gear"></i> TÃ©cnicos
-                </a>
-            </li>
-
-            <li>
-                <a href="${pageContext.request.contextPath}/IncidenciaServlet?action=list"
-                   class="${page == 'incidencias' ? 'active' : ''}">
-                    <i class="fa-solid fa-ticket-alt"></i> Incidencias
-                </a>
-            </li>
-
-            <li>
-                <a href="${pageContext.request.contextPath}/HistorialEquipoServlet?action=list"
-                   class="${page == 'historial' ? 'active' : ''}">
-                    <i class="fa-solid fa-clock-rotate-left"></i> Historial Equipo
-                </a>
-            </li>
-
-            <li>
-                <a href="${pageContext.request.contextPath}/InformeTecnicoServlet?action=list"
-                   class="${page == 'informes' ? 'active' : ''}">
-                    <i class="fa-solid fa-file-circle-check"></i> Informe TÃ©cnico
-                </a>
-            </li>
-
-            <li>
-                <a href="${pageContext.request.contextPath}/RepuestoServlet?action=list"
-                   class="${page == 'repuestos' ? 'active' : ''}">
-                    <i class="fa-solid fa-boxes-stacked"></i> Repuestos
-                </a>
-            </li>
-
-            <li>
-                <a href="${pageContext.request.contextPath}/SolicitudRepuestoServlet?action=list"
-                   class="${page == 'solicitudes' ? 'active' : ''}">
-                    <i class="fa-solid fa-file-signature"></i> Solicitudes de Repuestos
-                </a>
-            </li>
         </ul>
     </nav>
-
-    <div class="logout" onclick="location.href='${pageContext.request.contextPath}/LogoutServlet'">
-        <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesiÃ³n
-    </div>
 </div>

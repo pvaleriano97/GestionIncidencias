@@ -11,6 +11,8 @@ public class Tecnico {
     private String especialidad;
   private int Disponibilidad;
     private int ticketsCerrados;
+        private int totalResueltas;
+
     // Getters y Setters
     public int getIdTecnico() {
         return idTecnico;
@@ -50,5 +52,11 @@ public class Tecnico {
         this.Disponibilidad = Disponibilidad;
     }
 
- 
+ public int getTotalResueltas() {
+        return totalResueltas;
+    }
+
+    public void setTotalResueltas(int totalResueltas) {
+        this.totalResueltas = totalResueltas;
+    }
 }
