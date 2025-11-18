@@ -149,39 +149,40 @@ public class TecnicoDAO implements ITecnicoDAO {
      * ============================================================
      */
     public List<Tecnico> obtenerTopTecnicos(int limite) {
-        List<Tecnico> lista = new ArrayList<>();
+    List<Tecnico> lista = new ArrayList<>();
 
-      String sql =
-    "SELECT t.idTecnico, t.nombre, t.especialidad, COUNT(i.idIncidencia) AS totalResueltas " +
-    "FROM tecnico t " +
-    "LEFT JOIN incidencia i ON t.idTecnico = i.idTecnico " +
-    "WHERE i.estado = 'Cerrado' " +
-    "GROUP BY t.idTecnico, t.nombre, t.especialidad " +
-    "ORDER BY totalResueltas DESC " +
-    "LIMIT ?";
+    String sql =
+        "SELECT t.idTecnico, t.nombre, t.especialidad, " +
+        "       COUNT(i.idIncidencia) AS totalResueltas " +
+        "FROM tecnico t " +
+        "LEFT JOIN incidencia i ON t.idTecnico = i.idTecnico " +
+        "     AND LOWER(i.estado) LIKE 'cerrad%' " + // <--- CORREGIDO
+        "GROUP BY t.idTecnico, t.nombre, t.especialidad " +
+        "ORDER BY totalResueltas DESC " +
+        "LIMIT ?";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(1, limite);
+        ps.setInt(1, limite);
 
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    Tecnico t = new Tecnico();
-                    t.setIdTecnico(rs.getInt("idTecnico"));
-                    t.setNombre(rs.getString("nombre"));
-                    t.setEspecialidad(rs.getString("especialidad"));
-                    t.setTotalResueltas(rs.getInt("totalResueltas"));
-                    lista.add(t);
-                }
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Tecnico t = new Tecnico();
+                t.setIdTecnico(rs.getInt("idTecnico"));
+                t.setNombre(rs.getString("nombre"));
+                t.setEspecialidad(rs.getString("especialidad"));
+                t.setTotalResueltas(rs.getInt("totalResueltas"));
+                lista.add(t);
             }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
         }
 
-        return lista;
+    } catch (SQLException ex) {
+        ex.printStackTrace();
     }
+
+    return lista;
+}
 
     /**
      * ============================================================

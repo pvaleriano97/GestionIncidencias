@@ -315,78 +315,156 @@ public class IncidenciaDAO {
     return 0;
 }
 public int totalAbiertasAdmin() {
-    String sql = "SELECT COUNT(*) FROM incidencia WHERE estado = 'Abierto'";
-    try (Connection con = DatabaseConnection.getConnection();
-         PreparedStatement ps = con.prepareStatement(sql);
-         ResultSet rs = ps.executeQuery()) {
+        String sql = "SELECT COUNT(*) FROM incidencia WHERE LOWER(estado) LIKE 'abiert%'";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
-        if (rs.next()) {
-            return rs.getInt(1);
+            if (rs.next()) return rs.getInt(1);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-    } catch (Exception e) {
-        e.printStackTrace();
+        return 0;
     }
-    return 0;
-}
 public int totalCerradasAdmin() {
-    String sql = "SELECT COUNT(*) FROM incidencia WHERE estado = 'Cerrado'";
-    try (Connection con = DatabaseConnection.getConnection();
-         PreparedStatement ps = con.prepareStatement(sql);
-         ResultSet rs = ps.executeQuery()) {
+    String sql = "SELECT COUNT(*) FROM incidencia WHERE LOWER(estado) LIKE 'cerrad%'";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
-        if (rs.next()) {
-            return rs.getInt(1);
+            if (rs.next()) return rs.getInt(1);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-    } catch (Exception e) {
-        e.printStackTrace();
+        return 0;
     }
-    return 0;
-}
 public int totalEnProcesoAdmin() {
-    String sql = "SELECT COUNT(*) FROM incidencia WHERE estado = 'En Proceso'";
-    try (Connection con = DatabaseConnection.getConnection();
-         PreparedStatement ps = con.prepareStatement(sql);
+        String sql = "SELECT COUNT(*) FROM incidencia WHERE LOWER(estado) LIKE 'en proceso%'";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) return rs.getInt(1);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+public List<Incidencia> obtenerUltimasIncidencias(int limite) {
+        List<Incidencia> lista = new ArrayList<>();
+
+        String sql = "SELECT * FROM incidencia ORDER BY fechaRegistro DESC LIMIT ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, limite);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Incidencia inc = new Incidencia();
+                    inc.setIdIncidencia(rs.getInt("idIncidencia"));
+                     inc.setDescripcion(rs.getString("descripcion"));
+                    inc.setEstado(rs.getString("estado"));
+                    inc.setFechaRegistro(rs.getTimestamp("fechaRegistro"));
+                    lista.add(inc);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+public int contarPorFecha(LocalDate fecha) {
+
+        String sql = "SELECT COUNT(*) FROM incidencia WHERE DATE(fechaRegistro) = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setDate(1, Date.valueOf(fecha));
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+public int contarTodas() {
+    String sql = "SELECT COUNT(*) FROM incidencia";
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql);
          ResultSet rs = ps.executeQuery()) {
 
         if (rs.next()) {
             return rs.getInt(1);
         }
 
-    } catch (Exception e) {
+    } catch (SQLException e) {
         e.printStackTrace();
     }
+
     return 0;
 }
-public List<Incidencia> obtenerUltimasIncidencias(int limite) {
+public int contarPorEstado(String estado) {
+    String sql = "SELECT COUNT(*) FROM incidencia WHERE estado = ?";
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setString(1, estado);
+
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) return rs.getInt(1);
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return 0;
+}
+public List<Incidencia> listarUltimas(int cantidad) {
+
     List<Incidencia> lista = new ArrayList<>();
+
     String sql = "SELECT i.idIncidencia, i.descripcion, i.estado, i.fechaRegistro, " +
-                 "u.nombre AS nombreUsuario, " +
-                 "t.nombre AS nombreTecnico, " +
-                 "e.codigoEquipo, e.tipo AS tipoEquipo " +
+                 "u.nombre AS nombreUsuario " +
                  "FROM incidencia i " +
-                 "LEFT JOIN usuario u ON i.idUsuario = u.idUsuario " +
-                 "LEFT JOIN tecnico t ON i.idTecnico = t.idTecnico " +
-                 "LEFT JOIN equipo e ON i.idEquipo = e.idEquipo " +
+                 "INNER JOIN usuario u ON u.idUsuario = i.idUsuario " +
                  "ORDER BY i.fechaRegistro DESC " +
-                 "LIMIT " + limite;
+                 "LIMIT ?";
 
-    try (Connection con = DatabaseConnection.getConnection();
-         PreparedStatement ps = con.prepareStatement(sql);
-         ResultSet rs = ps.executeQuery()) {
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
 
-        while (rs.next()) {
-            Incidencia inc = new Incidencia();
-            inc.setIdIncidencia(rs.getInt("idIncidencia"));
-            inc.setDescripcion(rs.getString("descripcion"));
-            inc.setEstado(rs.getString("estado"));
-            inc.setFechaRegistro(rs.getTimestamp("fechaRegistro"));
-            inc.setNombreUsuario(rs.getString("nombreUsuario"));
-            inc.setNombreTecnico(rs.getString("nombreTecnico"));
-            inc.setCodigoEquipo(rs.getString("codigoEquipo"));
-            inc.setTipoEquipo(rs.getString("tipoEquipo"));
-            lista.add(inc);
+        ps.setInt(1, cantidad);
+
+        try (ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Incidencia inc = new Incidencia();
+
+                inc.setIdIncidencia(rs.getInt("idIncidencia"));
+                inc.setDescripcion(rs.getString("descripcion"));
+                inc.setEstado(rs.getString("estado"));
+                inc.setFechaRegistro(rs.getTimestamp("fechaRegistro"));
+
+                // ⬅️ AHORA MUESTRA EL NOMBRE REAL
+                inc.setNombreUsuario(rs.getString("nombreUsuario"));
+
+                lista.add(inc);
+            }
         }
 
     } catch (SQLException e) {
@@ -395,18 +473,5 @@ public List<Incidencia> obtenerUltimasIncidencias(int limite) {
 
     return lista;
 }
-public int contarPorFecha(LocalDate fecha) {
-    String sql = "SELECT COUNT(*) FROM incidencia WHERE DATE(fechaRegistro) = ?";
-    try (Connection con = DatabaseConnection.getConnection();
-         PreparedStatement ps = con.prepareStatement(sql)) {
-
-        ps.setDate(1, java.sql.Date.valueOf(fecha));
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()) return rs.getInt(1);
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    return 0;
 }
-}
+
