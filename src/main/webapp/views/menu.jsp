@@ -69,16 +69,8 @@
                         <i class="fa-solid fa-file-lines"></i> Informe Técnico
                     </a>
                 </li>
-                 <li>
-                      </li>
-                        <li>
-                      </li>
-                        <li>
-                      </li>
-                        <li>
-                      </li>
-                        <li>
-                      </li>
+          
+                 
             </c:if>
 
             <li class="logout">
