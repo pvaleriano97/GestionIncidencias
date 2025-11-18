@@ -81,7 +81,7 @@ public class LoginServlet extends HttpServlet {
             // Redirige según rol
             String rol = authenticatedUser.getRol().toLowerCase();
             if ("admin".equals(rol)) {
-                response.sendRedirect(request.getContextPath() + "/views/adminDashboard.jsp");
+                response.sendRedirect(request.getContextPath() + "/AdminDashboardServlet");
             } else if ("tecnico".equals(rol)) {
                 response.sendRedirect(request.getContextPath() + "/views/tecnicoDashboard.jsp");
             } else {

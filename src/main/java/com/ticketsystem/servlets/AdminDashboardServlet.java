@@ -3,6 +3,7 @@ package com.ticketsystem.servlets;
 import com.ticketsystem.dao.IncidenciaDAO;
 import com.ticketsystem.dao.TecnicoDAO;
 import com.ticketsystem.model.Incidencia;
+import com.ticketsystem.model.Tecnico; // si tienes este modelo
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -21,9 +22,9 @@ public class AdminDashboardServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Verificar rol admin
+        // Verificar rol admin (ignorando mayúsculas/minúsculas)
         String rol = (String) request.getSession().getAttribute("role");
-        if (rol == null || !rol.equals("admin")) {
+        if (rol == null || !rol.equalsIgnoreCase("admin")) {
             response.sendRedirect(request.getContextPath() + "/LoginServlet");
             return;
         }
@@ -43,32 +44,39 @@ public class AdminDashboardServlet extends HttpServlet {
         request.setAttribute("cerradas", cerradas);
         request.setAttribute("enProceso", enProceso);
 
-        // Top 5 técnicos
-        request.setAttribute("topTecnicos", tecnicoDAO.obtenerTopTecnicos(5));
+        // Top 5 técnicos (asegúrate que el método no retorne null)
+        List<?> topTecnicos = tecnicoDAO.obtenerTopTecnicos(5);
+        if (topTecnicos == null) topTecnicos = new ArrayList<>();
+        request.setAttribute("topTecnicos", topTecnicos);
 
         // Últimas 5 incidencias
-        request.setAttribute("ultimasIncidencias", incidenciaDAO.obtenerUltimasIncidencias(5));
+        List<Incidencia> ultimas = incidenciaDAO.obtenerUltimasIncidencias(5);
+        if (ultimas == null) ultimas = new ArrayList<>();
+        request.setAttribute("ultimasIncidencias", ultimas);
 
         // ===== Gráfico de incidencias por día (última semana) =====
-        // Suponiendo que la fechaRegistro es tipo TIMESTAMP en BD
         LocalDate today = LocalDate.now();
         List<String> diasSemana = new ArrayList<>();
         List<Integer> incidenciasPorDia = new ArrayList<>();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE"); // Lun, Mar, etc.
 
-        // Últimos 7 días
         for (int i = 6; i >= 0; i--) {
             LocalDate dia = today.minusDays(i);
-            diasSemana.add(dia.format(formatter)); // Lun, Mar, etc.
-            int count = incidenciaDAO.contarPorFecha(dia); // nuevo método
+            diasSemana.add(dia.format(formatter));
+            int count = incidenciaDAO.contarPorFecha(dia); // asegúrate que existe y funciona
             incidenciasPorDia.add(count);
         }
 
         request.setAttribute("diasSemana", diasSemana);
         request.setAttribute("incidenciasPorDia", incidenciasPorDia);
 
-        // Forward al JSP
+        // DEBUG (temporal: quita o usa logger en producción)
+        System.out.println("AdminDashboard: total=" + totalIncidencias + ", abiertas=" + abiertas +
+                ", cerradas=" + cerradas + ", enProceso=" + enProceso);
+        System.out.println("Top tecnicos size: " + topTecnicos.size() + " - ultimas size: " + ultimas.size());
+
+        // Forward al JSP (usa la ruta que tengas realmente)
         request.getRequestDispatcher("/views/adminDashboard.jsp").forward(request, response);
     }
 

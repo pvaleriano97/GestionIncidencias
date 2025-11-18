@@ -18,6 +18,11 @@
 
             <!-- ADMIN -->
             <c:if test="${sessionScope.role == 'admin'}">
+                <li>
+        <a href="${pageContext.request.contextPath}/AdminDashboardServlet">
+            <i class="fa-solid fa-chart-pie"></i> Dashboard Admin
+        </a>
+    </li>
                <li>
                    <a href="${pageContext.request.contextPath}/UsuarioServlet"> <i class="fa-solid fa-desktop"></i>Gestionar Usuarios</a>
                           </li>

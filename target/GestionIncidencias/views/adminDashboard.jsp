@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <!-- VALIDACIÓN DE SESIÓN Y ROL -->
-<c:if test="${sessionScope.role ne 'admin' && sessionScope.role ne 'ADMIN'}">
+<c:if test="${empty sessionScope.role || sessionScope.role.toLowerCase() ne 'admin'}">
     <c:redirect url="/LoginServlet"/>
 </c:if>
 
@@ -15,163 +15,150 @@
 
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
-
 <div class="dashboard-container">
 
-    <!-- MENU -->
     <%@ include file="menu.jsp" %>
 
-    <!-- AREA PRINCIPAL -->
     <div class="main-content">
 
-        <!-- HEADER -->
         <%@ include file="header.jsp" %>
 
         <div class="content-header">
             <h1>Dashboard Administrador</h1>
-                   </div>
-
-        <!-- ========== CARDS ========== -->
-        <div class="dashboard-cards">
-            <div class="card">
-                <h3>Total Incidencias</h3>
-                <h1>${totalIncidencias}</h1>
-            </div>
-
-            <div class="card">
-                <h3>Abiertas</h3>
-                <h1>${abiertas}</h1>
-            </div>
-
-            <div class="card">
-                <h3>Cerradas</h3>
-                <h1>${cerradas}</h1>
-            </div>
-
-            <div class="card">
-                <h3>En Proceso</h3>
-                <h1>${enProceso}</h1>
-            </div>
         </div>
 
-        <!-- ========== GRÁFICOS ========== -->
-        <div class="charts-container">
-            <div class="chart-box">
-                <h2>Distribución de Incidencias</h2>
-                <canvas id="chartEstados"></canvas>
+        <!-- GRID GENERAL: cards arriba, abajo dos columnas (charts + sidebar) -->
+        <div class="dashboard-grid">
+
+            <!-- CARDS -->
+            <div class="cards-row">
+                <div class="card small">
+                    <h3>Total Incidencias</h3>
+                    <div class="card-value">${totalIncidencias}</div>
+                </div>
+                <div class="card small">
+                    <h3>Abiertas</h3>
+                    <div class="card-value">${abiertas}</div>
+                </div>
+                <div class="card small">
+                    <h3>Cerradas</h3>
+                    <div class="card-value">${cerradas}</div>
+                </div>
+                <div class="card small">
+                    <h3>En Proceso</h3>
+                    <div class="card-value">${enProceso}</div>
+                </div>
             </div>
 
-            <div class="chart-box">
-                <h2>Incidencias por Día (Última Semana)</h2>
-                <canvas id="chartSemanal"></canvas>
-            </div>
-        </div>
+            <!-- COLUMNAS INFERIORES -->
+            <div class="bottom-columns">
 
-        <!-- ========== TOP TÉCNICOS ========== -->
-        <h2 class="section-title">Top 5 Técnicos</h2>
-        <table class="ticket-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Especialidad</th>
-                    <th>Cerrados</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach var="tec" items="${topTecnicos}">
-                    <tr>
-                        <td>${tec.idTecnico}</td>
-                        <td>${tec.nombre}</td>
-                        <td>${tec.especialidad}</td>
-                        <td>${tec.ticketsCerrados}</td>
-                    </tr>
-                </c:forEach>
-            </tbody>
-        </table>
+                <!-- IZQUIERDA: GRÁFICOS -->
+                <div class="charts-column">
+                    <div class="chart-box">
+                        <h4>Distribución de Incidencias</h4>
+                        <canvas id="chartEstados"></canvas>
+                    </div>
 
-        <!-- ========== ÚLTIMAS INCIDENCIAS ========== -->
-        <h2 class="section-title">Últimas Incidencias</h2>
+                    <div class="chart-box">
+                        <h4>Incidencias por Día (Última Semana)</h4>
+                        <canvas id="chartSemanal"></canvas>
+                    </div>
+                </div>
 
-        <table class="ticket-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Descripción</th>
-                    <th>Estado</th>
-                    <th>Usuario</th>
-                    <th>Técnico</th>
-                    <th>Equipo</th>
-                    <th>Fecha</th>
-                </tr>
-            </thead>
+                <!-- DERECHA: TOP TÉCNICOS + ÚLTIMAS INCIDENCIAS -->
+                <aside class="right-column">
+                    <div class="panel">
+                        <h4>Top 5 Técnicos</h4>
 
-            <tbody>
-                <c:if test="${empty ultimasIncidencias}">
-                    <tr>
-                        <td colspan="7" style="text-align:center;">No hay incidencias registradas</td>
-                    </tr>
-                </c:if>
+                        <c:if test="${empty topTecnicos}">
+                            <p class="muted">No hay datos de técnicos.</p>
+                        </c:if>
 
-                <c:forEach var="inc" items="${ultimasIncidencias}">
-                    <tr>
-                        <td>${inc.idIncidencia}</td>
-                        <td>${inc.descripcion}</td>
-                        <td>${inc.estado}</td>
-                        <td>${inc.nombreUsuario}</td>
-                        <td>
-                            <c:choose>
-                                <c:when test="${empty inc.nombreTecnico}">
-                                    Sin asignar
-                                </c:when>
-                                <c:otherwise>
-                                    ${inc.nombreTecnico}
-                                </c:otherwise>
-                            </c:choose>
-                        </td>
-                        <td>
-                            <c:choose>
-                                <c:when test="${empty inc.codigoEquipo}">
-                                    Sin equipo
-                                </c:when>
-                                <c:otherwise>
-                                    ${inc.codigoEquipo} (${inc.tipoEquipo})
-                                </c:otherwise>
-                            </c:choose>
-                        </td>
-                        <td>
-                            <fmt:formatDate value="${inc.fechaRegistro}" pattern="dd/MM/yyyy HH:mm"/>
-                        </td>
-                    </tr>
-                </c:forEach>
-            </tbody>
-        </table>
+                        <table class="compact-table">
+                            <thead>
+                                <tr><th>ID</th><th>Nombre</th><th>Cerrados</th></tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="tec" items="${topTecnicos}">
+                                    <tr>
+                                        <td>${tec.idTecnico}</td>
+                                        <td>${tec.nombre}</td>
+                                        <td>${tec.ticketsCerrados}</td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
 
-    </div>
-</div>
+                    <div class="panel">
+                        <h4>Últimas Incidencias</h4>
+
+                        <c:if test="${empty ultimasIncidencias}">
+                            <p class="muted">No hay incidencias registradas.</p>
+                        </c:if>
+
+                        <table class="compact-table">
+                            <thead><tr><th>ID</th><th>Desc</th><th>Estado</th></tr></thead>
+                            <tbody>
+                                <c:forEach var="inc" items="${ultimasIncidencias}">
+                                    <tr>
+                                        <td>${inc.idIncidencia}</td>
+                                        <td><c:out value="${fn:length(inc.descripcion) > 30 ? fn:substring(inc.descripcion,0,30) : inc.descripcion}" /></td>
+                                        <td>${inc.estado}</td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                </aside>
+
+            </div> <!-- bottom-columns -->
+
+        </div> <!-- dashboard-grid -->
+
+    </div> <!-- main-content -->
+</div> <!-- dashboard-container -->
 
 <!-- ================== SCRIPTS ================== -->
 <script>
-    new Chart(document.getElementById('chartEstados'), {
+    // Valores seguros para JS (si vienen vacíos, asigna 0 o [])
+    var abiertas = ${empty abiertas ? 0 : abiertas};
+    var enProceso = ${empty enProceso ? 0 : enProceso};
+    var cerradas = ${empty cerradas ? 0 : cerradas};
+
+    // arrays para chart (si vienen vacíos, crear array vacío)
+    var diasSemana = [
+        <c:forEach var="d" items="${diasSemana}" varStatus="s">'${d}'${!s.last ? ',' : ''}</c:forEach>
+    ];
+    var incidenciasPorDia = [
+        <c:forEach var="c" items="${incidenciasPorDia}" varStatus="s">${c}${!s.last ? ',' : ''}</c:forEach>
+    ];
+
+    // Chart 1 - Doughnut
+    const ctx1 = document.getElementById('chartEstados').getContext('2d');
+    new Chart(ctx1, {
         type: 'doughnut',
         data: {
             labels: ['Abiertas', 'En Proceso', 'Cerradas'],
             datasets: [{
-                data: [${abiertas}, ${enProceso}, ${cerradas}],
+                data: [abiertas, enProceso, cerradas],
                 backgroundColor: ['#f39c12', '#3498db', '#2ecc71']
             }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom', labels: { boxWidth:10 } } }
         }
     });
 
-    const diasSemana = [<c:forEach var="d" items="${diasSemana}" varStatus="s">'${d}'${!s.last ? ',' : ''}</c:forEach>];
-    const incidenciasPorDia = [<c:forEach var="c" items="${incidenciasPorDia}" varStatus="s">${c}${!s.last ? ',' : ''}</c:forEach>];
-
-    new Chart(document.getElementById('chartSemanal'), {
+    // Chart 2 - Line
+    const ctx2 = document.getElementById('chartSemanal').getContext('2d');
+    new Chart(ctx2, {
         type: 'line',
         data: {
             labels: diasSemana,
@@ -179,10 +166,16 @@
                 label: 'Incidencias',
                 data: incidenciasPorDia,
                 borderColor: '#3498db',
-                backgroundColor: 'rgba(52,152,219,0.2)',
+                backgroundColor: 'rgba(52,152,219,0.12)',
                 fill: true,
-                tension: 0.3
+                tension: 0.25,
+                pointRadius: 3
             }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true } },
+            plugins: { legend: { display: false } }
         }
     });
 </script>

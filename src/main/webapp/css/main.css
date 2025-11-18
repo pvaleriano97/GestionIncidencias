@@ -761,6 +761,78 @@ table tbody tr:hover {
     .form-row .full {
         grid-column: span 1;
     }
-    }    }
+    }  
+    /* ===== Dashboard compacto ===== */
+.dashboard-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 8px 0;
+}
+
+/* Cards: fila única, 4 columnas */
+.cards-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 6px;
+}
+
+.card.small {
+    background: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    text-align: center;
+}
+.card.small h3 { font-size: 13px; color:#666; margin-bottom:6px; }
+.card.small .card-value { font-size: 20px; font-weight:700; color:#333; }
+
+/* Bottom columns: charts + sidebar */
+.bottom-columns {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* charts a la izquierda, sidebar a la derecha */
+    gap: 12px;
+    align-items: start;
+}
+
+/* Chart boxes */
+.charts-column .chart-box {
+    background: #fff;
+    border-radius: 10px;
+    padding: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    margin-bottom: 12px;
+    height: 240px; /* fijo para mantener tamaño y que entre en pantalla */
+}
+.charts-column .chart-box h4 { font-size: 14px; margin: 0 0 8px 0; text-align:center; }
+
+/* Right column panels */
+.right-column .panel {
+    background: #fff;
+    border-radius: 10px;
+    padding: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    margin-bottom: 12px;
+}
+.right-column h4 { margin: 0 0 8px 0; font-size: 14px; text-align:left; }
+.muted { color:#777; font-size:13px; }
+
+/* Compact tables */
+.compact-table { width:100%; border-collapse: collapse; font-size:13px; }
+.compact-table thead th { text-align:left; font-size:12px; color:#444; padding-bottom:6px; }
+.compact-table td { padding:6px 4px; border-bottom:1px solid #eee; }
+
+/* Responsive adjustments */
+@media (max-width: 1100px) {
+    .cards-row { grid-template-columns: repeat(2, 1fr); }
+    .bottom-columns { grid-template-columns: 1fr; }
+    .charts-column .chart-box { height: 220px; }
+}
+@media (max-width: 600px) {
+    .cards-row { grid-template-columns: 1fr; }
+    .charts-column .chart-box { height: 200px; }
+}
+}
 
 
