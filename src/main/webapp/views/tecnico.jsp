@@ -45,6 +45,20 @@
                         <option value="0" ${tecnicoEdit != null && tecnicoEdit.disponibilidad == 0 ? 'selected' : ''}>No disponible</option>
                     </select>
                 </div>
+                    <div class="form-group">
+    <label>Usuario asignado</label>
+    <select name="idUsuario" required>
+        <option value="">--Seleccione--</option>
+
+        <c:forEach var="u" items="${listaUsuarios}">
+            <option value="${u.idUsuario}"
+                ${tecnicoEdit != null && tecnicoEdit.idUsuario == u.idUsuario ? "selected" : ""}>
+                ${u.nombre} ${u.apellido} (${u.correo})
+            </option>
+        </c:forEach>
+
+    </select>
+</div>
 
                 <div class="form-buttons">
                     <button type="submit" class="btn-primary">Guardar</button>

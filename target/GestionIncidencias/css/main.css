@@ -835,6 +835,75 @@ table tbody tr:hover {
     .cards-row { grid-template-columns: 1fr; }
     .charts-column .chart-box { height: 200px; }
 }
+
+/* Contenedor de acciones */
+.ticket-table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Íconos de acción */
+.icon-btn {
+    font-size: 18px;
+    margin: 0 6px;
+    cursor: pointer;
+}
+
+/* Botón de eliminar */
+.icon-btn.delete {
+    color: red;
+}
+
+/* Si el botón está oculto (no renderizado), no deja espacio */
+.ticket-table td a:empty {
+    display: none;
+}
+/* Botones normales */
+.icon-btn {
+    font-size: 18px;
+    margin: 0 6px;
+    cursor: pointer;
+}
+
+/* Botón borrar */
+.icon-btn.delete {
+    color: red;
+}
+
+/* Íconos deshabilitados */
+.icon-btn.disabled {
+    color: #999 !important;
+    cursor: not-allowed;
+    opacity: 0.5;
+    pointer-events: none; /* ← bloquea los clics */
+}
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    font-size: 15px;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Tipos */
+.toast.error { background: #ff4d4d; color: white; }
+.toast.success { background: #4CAF50; color: white; }
+.toast.info { background: #2196F3; color: white; }
+
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.hide { opacity: 0; transform: translateY(-20px); }
+
+.toast i { font-size: 16px; }
+
 }
 
 

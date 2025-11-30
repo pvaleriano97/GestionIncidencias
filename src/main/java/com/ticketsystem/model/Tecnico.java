@@ -1,22 +1,27 @@
-
 package com.ticketsystem.model;
 
-/**
- *
- * @author ROSA SANDOVAL
- */
 public class Tecnico {
+
     private int idTecnico;
     private String nombre;
     private String especialidad;
-  private int Disponibilidad;
+    private int idUsuario;
+    private int disponibilidad;
     private int ticketsCerrados;
-        private int totalResueltas;
+    private int totalResueltas;
 
-    // Getters y Setters
+    // Constructor vacío OBLIGATORIO
+    public Tecnico() {
+    }
+
+    public Tecnico(int idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
     public int getIdTecnico() {
         return idTecnico;
     }
+
     public void setIdTecnico(int idTecnico) {
         this.idTecnico = idTecnico;
     }
@@ -24,6 +29,7 @@ public class Tecnico {
     public String getNombre() {
         return nombre;
     }
+
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
@@ -31,10 +37,26 @@ public class Tecnico {
     public String getEspecialidad() {
         return especialidad;
     }
+
     public void setEspecialidad(String especialidad) {
         this.especialidad = especialidad;
     }
-    
+
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public int getDisponibilidad() {
+        return disponibilidad;
+    }
+
+    public void setDisponibilidad(int disponibilidad) {
+        this.disponibilidad = disponibilidad;
+    }
 
     public int getTicketsCerrados() {
         return ticketsCerrados;
@@ -44,15 +66,7 @@ public class Tecnico {
         this.ticketsCerrados = ticketsCerrados;
     }
 
-    public int getDisponibilidad() {
-        return Disponibilidad;
-    }
-
-    public void setDisponibilidad(int Disponibilidad) {
-        this.Disponibilidad = Disponibilidad;
-    }
-
- public int getTotalResueltas() {
+    public int getTotalResueltas() {
         return totalResueltas;
     }
 

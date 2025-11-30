@@ -5,17 +5,17 @@ import java.util.List;
 
 public interface ITecnicoDAO {
 
-    boolean insertar(Tecnico tecnico) throws Exception;
-
-    boolean actualizar(Tecnico tecnico) throws Exception;
-
-    boolean eliminar(int id) throws Exception;
-
-    Tecnico buscarPorId(int id) throws Exception;
-
+    List<Tecnico> listar();
     List<Tecnico> listar(int page, int size, String filtro) throws Exception;
 
     int contar(String filtro) throws Exception;
+    Tecnico buscarPorId(int id) throws Exception;
 
-    List<Tecnico> listar(); // para combos sin paginación
+    boolean insertar(Tecnico t) throws Exception;
+    boolean actualizar(Tecnico t) throws Exception;
+    boolean eliminar(int id) throws Exception;
+
+    Tecnico buscarPorIdUsuario(int idUsuario);
+
+    List<Tecnico> obtenerTopTecnicos(int limite);  // <---- AGREGADO
 }

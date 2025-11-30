@@ -1,118 +1,152 @@
 package com.ticketsystem.servlets;
 
 import com.ticketsystem.dao.TecnicoDAO;
-import com.ticketsystem.dao.ITecnicoDAO;
+import com.ticketsystem.dao.UsuarioDAO;
 import com.ticketsystem.model.Tecnico;
+import com.ticketsystem.model.Usuario;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
 @WebServlet(name = "TecnicoServlet", urlPatterns = {"/TecnicoServlet"})
 public class TecnicoServlet extends HttpServlet {
 
-    private final ITecnicoDAO tecnicoDAO = new TecnicoDAO();
+    private TecnicoDAO tecnicoDAO = new TecnicoDAO();
+    private UsuarioDAO usuarioDAO = new UsuarioDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String action = request.getParameter("action");
-        if (action == null) action = "listar";
+        if (action == null) action = "list";
 
         try {
             switch (action) {
+
                 case "edit":
-                    int idEdit = Integer.parseInt(request.getParameter("id"));
-                    Tecnico tecnicoEdit = tecnicoDAO.buscarPorId(idEdit);
-                    request.setAttribute("tecnicoEdit", tecnicoEdit);
-                    listarTecnicos(request, response);
+                    editar(request, response);
                     break;
 
                 case "delete":
-                    int idDel = Integer.parseInt(request.getParameter("id"));
-                    tecnicoDAO.eliminar(idDel);
-                    listarTecnicos(request, response);
+                    eliminar(request, response);
                     break;
 
                 default:
-                    listarTecnicos(request, response);
+                    listar(request, response);
                     break;
             }
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            request.setAttribute("error", ex.getMessage());
-            request.getRequestDispatcher("/views/error.jsp").forward(request, response);
+            response.sendError(500, "Error en TecnicoServlet");
         }
     }
 
+    // ====================================================
+    // LISTAR TÉCNICOS + PAGINACIÓN + BÚSQUEDA
+    // ====================================================
+    private void listar(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+
+        // Combo para el formulario
+        request.setAttribute("listaUsuarios", usuarioDAO.listarTecnicos());
+
+        // Página actual
+        int page = (request.getParameter("pagina") == null)
+                ? 1
+                : Integer.parseInt(request.getParameter("pagina"));
+
+        int size = 10;
+
+        // Búsqueda
+        String search = request.getParameter("search");
+        if (search == null) search = "";
+
+        // Lista paginada
+        request.setAttribute("listaTecnicos", tecnicoDAO.listar(page, size, search));
+        request.setAttribute("paginaActual", page);
+        request.setAttribute("search", search);
+
+        // Total de páginas
+        int total = tecnicoDAO.contar(search);
+        request.setAttribute("totalPaginas", (int) Math.ceil((double) total / size));
+
+        request.getRequestDispatcher("views/tecnico.jsp").forward(request, response);
+    }
+
+    // ====================================================
+    // EDITAR
+    // ====================================================
+    private void editar(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        Tecnico t = tecnicoDAO.buscarPorId(id);
+
+        request.setAttribute("tecnicoEdit", t);
+
+        // Necesario para cargar el combo otra vez
+        request.setAttribute("listaUsuarios", usuarioDAO.listarTecnicos());
+
+        listar(request, response);
+    }
+
+    // ====================================================
+    // ELIMINAR
+    // ====================================================
+    private void eliminar(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+
+        int id = Integer.parseInt(request.getParameter("id"));
+        tecnicoDAO.eliminar(id);
+
+        response.sendRedirect("TecnicoServlet");
+    }
+
+    // ====================================================
+    // INSERTAR / ACTUALIZAR (POST)
+    // ====================================================
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        request.setCharacterEncoding("UTF-8");
-        String idTecnicoStr = request.getParameter("idTecnico");
-
         try {
-            Tecnico tecnico = new Tecnico();
-            tecnico.setNombre(request.getParameter("nombre"));
-            tecnico.setEspecialidad(request.getParameter("especialidad"));
-            tecnico.setDisponibilidad(
-                Integer.parseInt(request.getParameter("disponibilidad"))
-            );
 
-            if (idTecnicoStr == null || idTecnicoStr.isEmpty()) {
-                tecnicoDAO.insertar(tecnico);
+            int idTecnico = (request.getParameter("idTecnico") == null ||
+                    request.getParameter("idTecnico").isEmpty())
+                    ? 0
+                    : Integer.parseInt(request.getParameter("idTecnico"));
+
+            String nombre = request.getParameter("nombre");
+            String especialidad = request.getParameter("especialidad");
+            int disponibilidad = Integer.parseInt(request.getParameter("disponibilidad"));
+            int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+
+            Tecnico t = new Tecnico();
+            t.setIdTecnico(idTecnico);
+            t.setNombre(nombre);
+            t.setEspecialidad(especialidad);
+            t.setDisponibilidad(disponibilidad);
+            t.setIdUsuario(idUsuario);
+
+            if (idTecnico == 0) {
+                tecnicoDAO.insertar(t);    // Nuevo técnico
             } else {
-                tecnico.setIdTecnico(Integer.parseInt(idTecnicoStr));
-                tecnicoDAO.actualizar(tecnico);
+                tecnicoDAO.actualizar(t);  // Editar técnico
             }
 
-            listarTecnicos(request, response);
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            request.setAttribute("error", ex.getMessage());
-            request.getRequestDispatcher("/views/error.jsp").forward(request, response);
-        }
-    }
-
-    private void listarTecnicos(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        try {
-            int pagina = 1;
-            int registrosPorPagina = 5;
-            String search = request.getParameter("search");
-            if (search == null) search = "";
-
-            if (request.getParameter("pagina") != null) {
-                pagina = Integer.parseInt(request.getParameter("pagina"));
-            }
-
-            List<Tecnico> listaTecnicos = tecnicoDAO.listar(pagina, registrosPorPagina, search);
-            int totalRegistros = tecnicoDAO.contar(search);
-            int totalPaginas = (int) Math.ceil(totalRegistros / (double) registrosPorPagina);
-
-            request.setAttribute("listaTecnicos", listaTecnicos);
-            request.setAttribute("paginaActual", pagina);
-            request.setAttribute("totalPaginas", totalPaginas);
-            request.setAttribute("search", search);
-
-            request.getRequestDispatcher("/views/tecnico.jsp").forward(request, response);
+            response.sendRedirect("TecnicoServlet");
 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", e.getMessage());
-            request.getRequestDispatcher("/views/error.jsp").forward(request, response);
+            response.sendError(500, "Error en registro/actualización de técnico");
         }
-    }
-
-    @Override
-    public String getServletInfo() {
-        return "Servlet para gestión de Técnicos con JSP y paginación";
     }
 }

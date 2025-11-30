@@ -34,7 +34,7 @@ public class TecnicoDashboardServlet extends HttpServlet {
         request.setAttribute("incidenciasTecnico", dao.listarAsignadas(idTecnico));
 
         // Redirige al dashboard del técnico
-        request.getRequestDispatcher("/views/tecnicoDashboard.jsp").forward(request, response);
+        request.getRequestDispatcher("views/tecnicoDashboard.jsp").forward(request, response);
     }
 
     @Override

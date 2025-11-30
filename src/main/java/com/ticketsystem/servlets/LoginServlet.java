@@ -1,6 +1,8 @@
 package com.ticketsystem.servlets;
 
+import com.ticketsystem.dao.TecnicoDAO;
 import com.ticketsystem.dao.UsuarioDAO;
+import com.ticketsystem.model.Tecnico;
 import com.ticketsystem.model.Usuario;
 
 import javax.servlet.ServletException;
@@ -64,34 +66,38 @@ public class LoginServlet extends HttpServlet {
         Usuario authenticatedUser = usuarioDAO.authenticate(correo, contrasena);
 
         if (authenticatedUser != null) {
-            HttpSession session = request.getSession();
-            session.setAttribute("user", authenticatedUser);
-            session.setAttribute("email", authenticatedUser.getCorreo());
-            session.setAttribute("name", authenticatedUser.getNombre());
-            session.setAttribute("role", authenticatedUser.getRol());
-            session.setAttribute("userId", authenticatedUser.getIdUsuario());
+    HttpSession session = request.getSession();
+    session.setAttribute("user", authenticatedUser);
+    session.setAttribute("email", authenticatedUser.getCorreo());
+    session.setAttribute("name", authenticatedUser.getNombre());
+    session.setAttribute("role", authenticatedUser.getRol());
+    session.setAttribute("userId", authenticatedUser.getIdUsuario());
 
-            // Configurar tiempo de sesión
-            if ("on".equals(rememberMe)) {
-                session.setMaxInactiveInterval(7 * 24 * 60 * 60); // 7 días
-            } else {
-                session.setMaxInactiveInterval(30 * 60); // 30 minutos
-            }
+    // NUEVO: obtener idTecnico del usuario logueado
+if ("tecnico".equalsIgnoreCase(authenticatedUser.getRol())) {
 
-            // Redirige según rol
-            String rol = authenticatedUser.getRol().toLowerCase();
-            if ("admin".equals(rol)) {
-                response.sendRedirect(request.getContextPath() + "/AdminDashboardServlet");
-            } else if ("tecnico".equals(rol)) {
-                response.sendRedirect(request.getContextPath() + "/views/tecnicoDashboard.jsp");
-            } else {
-                response.sendRedirect(request.getContextPath() + "/views/login.jsp");
-            }
+    TecnicoDAO tdao = new TecnicoDAO();
+    Tecnico tecnico = tdao.buscarPorIdUsuario(authenticatedUser.getIdUsuario());
 
-        } else {
-            request.setAttribute("error", "Correo electrónico o contraseña incorrectos");
-            request.setAttribute("correo", correo);
-            request.getRequestDispatcher("/views/login.jsp").forward(request, response);
-        }
+    if (tecnico != null) {
+        session.setAttribute("idTecnico", tecnico.getIdTecnico());
+        session.setAttribute("nombreTecnico", tecnico.getNombre());
+    } else {
+        // SI EL TÉCNICO NO EXISTE EN LA TABLA tecnico ⇒ NO DEBE ENTRAR AL SISTEMA
+        request.setAttribute("error", "⚠ Su usuario no está asociado a un técnico del sistema.");
+        request.getRequestDispatcher("/views/login.jsp").forward(request, response);
+        return;
     }
 }
+
+
+    // Redirección según rol
+    if ("admin".equalsIgnoreCase(authenticatedUser.getRol())) {
+        response.sendRedirect(request.getContextPath() + "/AdminDashboardServlet");
+    } else if ("tecnico".equalsIgnoreCase(authenticatedUser.getRol())) {
+        response.sendRedirect(request.getContextPath() + "/TecnicoDashboardServlet");
+    } else {
+        response.sendRedirect(request.getContextPath() + "/views/login.jsp");
+    }
+}
+}}

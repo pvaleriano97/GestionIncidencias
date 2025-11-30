@@ -52,11 +52,21 @@
                         <i class="fa-solid fa-file-lines"></i> Informe Técnico
                     </a>
                 </li>
+                 <li>
+        <a href="${pageContext.request.contextPath}/ReportesServlet">
+            <i class="fa-solid fa-file-chart-line"></i> Reportes
+        </a>
+    </li>
                 
             </c:if>
 
             <!-- TECNICO -->
             <c:if test="${sessionScope.role == 'tecnico'}">
+                <li>
+        <a href="${pageContext.request.contextPath}/TecnicoDashboardServlet">
+            <i class="fa-solid fa-chart-pie"></i> Dashboard Tecnicos
+        </a>
+    </li>
                 <li>
                     <a href="${pageContext.request.contextPath}/IncidenciaServlet">
                         <i class="fa-solid fa-ticket"></i> Incidencias
@@ -74,7 +84,11 @@
                         <i class="fa-solid fa-file-lines"></i> Informe Técnico
                     </a>
                 </li>
-          
+          <li>
+        <a href="${pageContext.request.contextPath}/ReportesServlet">
+            <i class="fa-solid fa-file-chart-line"></i> Reportes
+        </a>
+    </li>
                  
             </c:if>
 

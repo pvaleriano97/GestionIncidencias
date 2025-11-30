@@ -24,6 +24,13 @@
 
     <!-- CHART JS -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+    #chartTecnico {
+        max-width: 400px;   /* ancho promedio más pequeño */
+        max-height: 250px;  /* reduce la altura */
+        margin: 0 auto;     /* centrar */
+    }
+</style>
 </head>
 
 <body>
@@ -70,7 +77,7 @@
         <div class="charts-container">
             <div class="chart-box">
                 <h2>Progreso de Incidencias</h2>
-                <canvas id="chartTecnico"></canvas>
+                <canvas id="chartTecnico" ></canvas>
             </div>
         </div>
 
