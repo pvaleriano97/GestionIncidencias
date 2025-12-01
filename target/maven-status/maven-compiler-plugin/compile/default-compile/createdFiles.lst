@@ -4,6 +4,7 @@ com\ticketsystem\model\InformeTecnico.class
 com\ticketsystem\dao\RepuestoDAO.class
 com\ticketsystem\export\ExportarPDF.class
 com\ticketsystem\model\Incidencia.class
+com\ticketsystem\model\User.class
 com\ticketsystem\servlets\AdminDashboardServlet.class
 com\ticketsystem\export\ExportarExcel.class
 com\ticketsystem\dao\EquipoDAO.class
@@ -11,6 +12,8 @@ com\ticketsystem\servlets\RepuestoServlet.class
 com\ticketsystem\dao\IRepuestoDAO.class
 com\ticketsystem\InformeTecnicoServlet.class
 com\ticketsystem\dao\IUsuarioDAO.class
+com\ticketsystem\dao\TicketDAO.class
+com\ticketsystem\model\Ticket.class
 com\ticketsystem\servlets\UsuarioServlet.class
 com\ticketsystem\dao\SolicitudRepuestoDAO.class
 com\ticketsystem\servlets\TecnicoServlet.class
@@ -25,8 +28,10 @@ com\ticketsystem\controller\SolicitudRepuestoServlet.class
 com\ticketsystem\dao\IEquipoDAO.class
 com\ticketsystem\util\DatabaseConnection.class
 com\ticketsystem\model\Repuesto.class
+com\ticketsystem\resources\JavaEE8Resource.class
 com\tu\paquete\IncidenciaServlet.class
 com\ticketsystem\model\Equipo.class
+com\ticketsystem\servlets\NuevoTicketServlet.class
 com\ticketsystem\dao\ITecnicoDAO.class
 com\ticketsystem\model\SolicitudRepuesto.class
 com\ticketsystem\servlets\LoginServlet.class
@@ -37,4 +42,6 @@ com\ticketsystem\dao\IncidenciaDAO.class
 com\ticketsystem\model\TecnicoReporte.class
 com\ticketsystem\dao\TecnicoDAO.class
 com\ticketsystem\servlets\EquipoServlet.class
+com\ticketsystem\servlets\ConfiguracionServlet.class
+com\ticketsystem\dao\UserDAO.class
 com\ticketsystem\dao\UsuarioDAO.class

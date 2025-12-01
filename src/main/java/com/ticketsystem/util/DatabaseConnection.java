@@ -6,8 +6,8 @@ import java.sql.SQLException;
 
 public class DatabaseConnection {
     private static final String URL = "jdbc:mysql://localhost:3306/gestion_incidencias?useSSL=false&serverTimezone=UTC";
-    private static final String USER = "root";
-    private static final String PASSWORD = "root"; // ⚠️ Verifica que sea la correcta para tu MySQL
+    private static final String USER = "admin";
+    private static final String PASSWORD = "admin"; // ⚠️ Verifica que sea la correcta para tu MySQL
 
     public static Connection getConnection() throws SQLException {
         try {

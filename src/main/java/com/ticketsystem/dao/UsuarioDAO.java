@@ -8,20 +8,22 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 public class UsuarioDAO implements IUsuarioDAO {
 
     public UsuarioDAO() {}
 public Usuario authenticate(String correo, String contrasena) {
 
-    String sql = "SELECT * FROM usuario WHERE correo = ? AND contrasena = ?";
+    //String sql = "SELECT * FROM usuario WHERE correo = ? AND contrasena = ?";
+    String sql = "SELECT * FROM usuario WHERE correo = ?";
 
     try (Connection conn = DatabaseConnection.getConnection();
          PreparedStatement ps = conn.prepareStatement(sql)) {
 
         ps.setString(1, correo);
-        ps.setString(2, contrasena);
-
-        ResultSet rs = ps.executeQuery();
+        //ps.setString(2, contrasena);
+        ResultSet rs= ps.executeQuery();
 
         if (rs.next()) {
             Usuario u = new Usuario();
@@ -32,7 +34,12 @@ public Usuario authenticate(String correo, String contrasena) {
             u.setContrasena(rs.getString("contrasena"));
             u.setRol(rs.getString("rol"));
             u.setArea(rs.getString("area"));
-            return u;
+            
+            // Encriptar la contraseña ingresada y comparar
+            String hashedInput = DigestUtils.sha256Hex(contrasena);
+            if (hashedInput.equals(u.getContrasena())) {
+                return u;
+            }
         }
 
     } catch (Exception e) {
@@ -145,7 +152,9 @@ public Usuario authenticate(String correo, String contrasena) {
             cs.setString(1, u.getNombre());
             cs.setString(2, u.getApellido());
             cs.setString(3, u.getCorreo());
-            cs.setString(4, u.getContrasena());
+            // Encriptar la contraseña antes de guardarla
+            String contrasenaEncriptada = DigestUtils.sha256Hex(u.getContrasena());
+            cs.setString(4, contrasenaEncriptada);
             cs.setString(5, u.getRol());
             cs.setString(6, u.getArea());
 
