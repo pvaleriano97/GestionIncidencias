@@ -163,6 +163,12 @@ body.login-body {
 }
 
 /* SIDEBAR */
+
+.menu-list {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
 .sidebar {
     width: 260px;
     background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
@@ -568,6 +574,72 @@ table tbody tr:hover {
 .icon-btn:hover {
     opacity: 0.8;
 }
+/* ==============================
+   HEADER SUPERIOR (top-header.jsp)
+============================== */
+.top-header {
+    background: #ffffff;
+    padding: 12px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ecf0f1;
+}
+
+.header-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.header-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-icon {
+    font-size: 26px;
+    color: #2c3e50;
+}
+
+.welcome-text {
+    font-size: 17px;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+/* Perfil – Usuario */
+.header-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-user .user-name {
+    font-weight: 500;
+    color: #333;
+    font-size: 14px;
+}
+
+/* Botón Logout */
+.logout-btn {
+    color: #e74c3c;
+    font-size: 18px;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.logout-btn:hover {
+    color: #c0392b;
+}
+
+/* Ajuste del contenido para que no suba debajo del header */
+.main-content {
+    margin-left: 260px;
+    padding-top: 90px !important; /* deja espacio para el header fijo */
+}
 
 /* ==============================
    Paginación compacta y centrada
@@ -625,4 +697,213 @@ table tbody tr:hover {
         padding: 3px 6px;
         font-size: 11px;
     }
+    
+    /*verificar*/
+
+.form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
+
+/* FILAS EN 2 COLUMNAS */
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* ⬅️ DOS COLUMNAS */
+    gap: 12px;
+}
+
+/* Para inputs de una sola columna */
+.form-row .full {
+    grid-column: span 2;
+}
+
+/* Estilos compactos */
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #444;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 6px 10px;
+    font-size: 13px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #6a11cb;
+    box-shadow: 0 0 3px rgba(106, 17, 203, 0.3);
+}
+
+/* Botones alineados a la derecha */
+.form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+/* Responsive: una sola columna en celulares */
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row .full {
+        grid-column: span 1;
+    }
+    }  
+    /* ===== Dashboard compacto ===== */
+.dashboard-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 8px 0;
+}
+
+/* Cards: fila única, 4 columnas */
+.cards-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 6px;
+}
+
+.card.small {
+    background: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    text-align: center;
+}
+.card.small h3 { font-size: 13px; color:#666; margin-bottom:6px; }
+.card.small .card-value { font-size: 20px; font-weight:700; color:#333; }
+
+/* Bottom columns: charts + sidebar */
+.bottom-columns {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* charts a la izquierda, sidebar a la derecha */
+    gap: 12px;
+    align-items: start;
+}
+
+/* Chart boxes */
+.chart-box {
+    background: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    height: 200px; /* reducir altura */
+
+}
+.charts-column .chart-box h4 {
+    font-size: 1rem; /* título más pequeño */
+    margin-bottom: 10px;
+}
+/* Right column panels */
+.right-column .panel {
+    background: #fff;
+    border-radius: 10px;
+    padding: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    margin-bottom: 12px;
+}
+.right-column h4 { margin: 0 0 8px 0; font-size: 14px; text-align:left; }
+.muted { color:#777; font-size:13px; }
+
+/* Compact tables */
+.compact-table { width:100%; border-collapse: collapse; font-size:13px; }
+.compact-table thead th { text-align:left; font-size:12px; color:#444; padding-bottom:6px; }
+.compact-table td { padding:6px 4px; border-bottom:1px solid #eee; }
+
+/* Responsive adjustments */
+@media (max-width: 1100px) {
+    .cards-row { grid-template-columns: repeat(2, 1fr); }
+    .bottom-columns { grid-template-columns: 1fr; }
+    .charts-column .chart-box { height: 220px; }
+}
+@media (max-width: 600px) {
+    .cards-row { grid-template-columns: 1fr; }
+    .charts-column .chart-box { height: 200px; }
+}
+
+/* Contenedor de acciones */
+.ticket-table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Íconos de acción */
+.icon-btn {
+    font-size: 18px;
+    margin: 0 6px;
+    cursor: pointer;
+}
+
+/* Botón de eliminar */
+.icon-btn.delete {
+    color: red;
+}
+
+/* Si el botón está oculto (no renderizado), no deja espacio */
+.ticket-table td a:empty {
+    display: none;
+}
+/* Botones normales */
+.icon-btn {
+    font-size: 18px;
+    margin: 0 6px;
+    cursor: pointer;
+}
+
+/* Botón borrar */
+.icon-btn.delete {
+    color: red;
+}
+
+/* Íconos deshabilitados */
+.icon-btn.disabled {
+    color: #999 !important;
+    cursor: not-allowed;
+    opacity: 0.5;
+    pointer-events: none; /* ← bloquea los clics */
+}
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    font-size: 15px;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Tipos */
+.toast.error { background: #ff4d4d; color: white; }
+.toast.success { background: #4CAF50; color: white; }
+.toast.info { background: #2196F3; color: white; }
+
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.hide { opacity: 0; transform: translateY(-20px); }
+
+.toast i { font-size: 16px; }
+
+}
+
+

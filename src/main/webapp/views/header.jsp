@@ -1,32 +1,25 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<div class="content-header">
-    <div class="header-left">
-        <button class="menu-toggle" onclick="toggleMenu()">
-            <i class="fa-solid fa-bars"></i>
-        </button>
-        <div>
-            <h1>Gesti√≥n de Incidencias</h1>
-            <p>Bienvenido al sistema</p>
-        </div>
-    </div>
+<header class="top-header">
 
-    <div class="header-right">
-        <span class="user-info">
-            <i class="fa-solid fa-user"></i>
-            <c:out value="${sessionScope.name != null ? sessionScope.name : 'Invitado'}"/>
+    <!-- TÌtulo del mÛdulo -->
+    <h1 class="header-title">${tituloPagina}</h1>
+
+    <!-- Usuario -->
+    <div class="header-user">
+        <!-- Icono de usuario -->
+        <i class="fa-solid fa-user user-icon"></i>
+
+        <!-- Texto de bienvenida -->
+        <span class="welcome-text">
+            Bienvenido  
+            <c:choose>
+                <c:when test="${sessionScope.role == 'admin'}">Administrador</c:when>
+                <c:when test="${sessionScope.role == 'tecnico'}">TÈcnico</c:when>
+                <c:otherwise>Usuario</c:otherwise>
+            </c:choose>
+            ${sessionScope.name}
         </span>
-        <a href="${pageContext.request.contextPath}/LogoutServlet" class="btn-primary">
-            <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesi√≥n
-        </a>
     </div>
-</div>
 
-<script>
-function toggleMenu() {
-    const sidebar = document.querySelector('.sidebar');
-    sidebar.classList.toggle('active');
-}
-</script>
-
+</header>

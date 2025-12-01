@@ -102,33 +102,33 @@ public class DashboardServlet extends HttpServlet {
             // 4️⃣ Lista de Incidencias en Proceso
             // ===============================
             List<Incidencia> incidenciasEnProceso = new ArrayList<>();
-            String sqlEnProceso = "SELECT i.idIncidencia, i.descripcion, i.estado, i.fechaRegistro, " +
-                                  "u.nombre AS nombreUsuario, t.nombre AS nombreTecnico, " +
-                                  "e.codigoEquipo, e.tipo AS tipoEquipo " +
-                                  "FROM incidencia i " +
-                                  "JOIN usuario u ON i.idUsuario = u.idUsuario " +
-                                  "JOIN equipo e ON i.idEquipo = e.idEquipo " +
-                                  "LEFT JOIN tecnico t ON i.idTecnico = t.idTecnico " +
-                                  "WHERE i.estado='En Proceso' " +
-                                  "ORDER BY i.fechaRegistro DESC";
+            String sqlEnProceso = "SELECT i.idIncidencia, i.descripcion, i.estado, i.fechaRegistro,\n" +
+"       u.nombre AS nombreUsuario, t.nombre AS nombreTecnico,\n" +
+"       e.codigoEquipo, e.tipo AS tipoEquipo\n" +
+"FROM incidencia i\n" +
+"JOIN usuario u ON i.idUsuario = u.idUsuario\n" +
+"JOIN equipo e ON i.idEquipo = e.idEquipo\n" +
+"LEFT JOIN tecnico t ON i.idTecnico = t.idTecnico\n" +
+"WHERE i.estado='En Proceso'\n" +
+"ORDER BY i.fechaRegistro DESC";
             try (PreparedStatement ps = conn.prepareStatement(sqlEnProceso); ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    Incidencia inc = new Incidencia();
-                    inc.setIdIncidencia(rs.getInt("idIncidencia"));
-                    inc.setDescripcion(rs.getString("descripcion"));
-                    inc.setEstado(rs.getString("estado"));
-                    inc.setFechaRegistro(rs.getTimestamp("fechaRegistro"));
-                    inc.setNombreUsuario(rs.getString("nombreUsuario"));
-                    inc.setNombreTecnico(rs.getString("nombreTecnico"));
-                    inc.setCodigoEquipo(rs.getString("codigoEquipo"));
-                    inc.setTipoEquipo(rs.getString("tipoEquipo"));
-                    incidenciasEnProceso.add(inc);
-                }
+    Incidencia inc = new Incidencia();
+    inc.setIdIncidencia(rs.getInt("idIncidencia"));
+    inc.setDescripcion(rs.getString("descripcion"));
+    inc.setEstado(rs.getString("estado"));
+    inc.setFechaRegistro(rs.getTimestamp("fechaRegistro"));
+    inc.setNombreUsuario(rs.getString("nombreUsuario"));
+    inc.setNombreTecnico(rs.getString("nombreTecnico"));
+    inc.setCodigoEquipo(rs.getString("codigoEquipo"));
+    inc.setTipoEquipo(rs.getString("tipoEquipo")); // ← LÍNEA OBLIGATORIA
+    incidenciasEnProceso.add(inc);
+}
             }
             request.setAttribute("incidenciasEnProceso", incidenciasEnProceso);
 
             // ===============================
-            // 5️⃣ Forward a JSP
+            //️⃣ Forward a JSP
             // ===============================
             request.getRequestDispatcher("/views/dashboard.jsp").forward(request, response);
 

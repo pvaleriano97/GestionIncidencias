@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
 public class Incidencia {
+
     private Integer idIncidencia;
     private String descripcion;
     private String estado;
@@ -12,16 +13,31 @@ public class Incidencia {
     private Integer idTecnico;
     private Timestamp fechaRegistro;
 
-    // Campos adicionales para mostrar en la tabla
+    // Campos adicionales
     private String nombreUsuario;
     private String codigoEquipo;
     private String tipoEquipo;
     private String nombreTecnico;
 
-    // Campo para mostrar fecha en formato legible
     private String fechaRegistroStr;
 
-    // Getters y setters normales
+    // Constructor vacío CORRECTO
+    public Incidencia() {
+    }
+
+    // Constructor válido (el único necesario)
+    public Incidencia(Integer idIncidencia, String descripcion, String estado,
+                      Integer idUsuario, Integer idEquipo, Integer idTecnico) {
+
+        this.idIncidencia = idIncidencia;
+        this.descripcion = descripcion;
+        this.estado = estado;
+        this.idUsuario = idUsuario;
+        this.idEquipo = idEquipo;
+        this.idTecnico = idTecnico;
+    }
+
+    // Getters y Setters
     public Integer getIdIncidencia() { return idIncidencia; }
     public void setIdIncidencia(Integer idIncidencia) { this.idIncidencia = idIncidencia; }
 
@@ -44,17 +60,14 @@ public class Incidencia {
 
     public void setFechaRegistro(Timestamp fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
-        // Formatear automáticamente la fecha
-        if (fechaRegistro != null) {
+        if (fechaRegistro != null)
             this.fechaRegistroStr = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(fechaRegistro);
-        } else {
+        else
             this.fechaRegistroStr = "";
-        }
     }
 
     public String getFechaRegistroStr() { return fechaRegistroStr; }
 
-    // Campos adicionales
     public String getNombreUsuario() { return nombreUsuario; }
     public void setNombreUsuario(String nombreUsuario) { this.nombreUsuario = nombreUsuario; }
 
