@@ -85,9 +85,14 @@ public class EquipoDAO implements IEquipoDAO {
         try (Connection c = DatabaseConnection.getConnection();
              CallableStatement cs = c.prepareCall(sql)) {
 
+            String estado = e.getEstado();
+            if (estado == null || estado.trim().isEmpty()) {
+                estado = "Operativo";
+            }
+
             cs.setString(1, e.getCodigoEquipo());
             cs.setString(2, e.getTipo());
-            cs.setString(3, e.getEstado());
+            cs.setString(3, estado);
             return cs.executeUpdate() > 0;
         }
     }
@@ -97,10 +102,15 @@ public class EquipoDAO implements IEquipoDAO {
         try (Connection c = DatabaseConnection.getConnection();
              CallableStatement cs = c.prepareCall(sql)) {
 
+            String estado = e.getEstado();
+            if (estado == null || estado.trim().isEmpty()) {
+                estado = "Operativo";
+            }
+
             cs.setInt(1, e.getIdEquipo());
             cs.setString(2, e.getCodigoEquipo());
             cs.setString(3, e.getTipo());
-            cs.setString(4, e.getEstado());
+            cs.setString(4, estado);
             return cs.executeUpdate() > 0;
         }
     }
@@ -115,28 +125,27 @@ public class EquipoDAO implements IEquipoDAO {
         }
     }
 
-    /**
-     * Método adicional para combos o listados simples sin paginación.
-     */
-public List<Equipo> listar() {
-    List<Equipo> lista = new ArrayList<>();
-    String sql = "SELECT idEquipo, codigoEquipo, tipo, estado FROM equipo ORDER BY codigoEquipo";
+    /** Listado simple (combos/selects) */
+    public List<Equipo> listar() {
+        List<Equipo> lista = new ArrayList<>();
+        String sql = "SELECT idEquipo, codigoEquipo, tipo, estado FROM equipo ORDER BY codigoEquipo";
 
-    try (Connection conn = DatabaseConnection.getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql);
-         ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
-        while (rs.next()) {
-            Equipo e = new Equipo(); // este es mi código
-            e.setIdEquipo(rs.getInt("idEquipo"));
-            e.setCodigoEquipo(rs.getString("codigoEquipo"));
-            e.setTipo(rs.getString("tipo"));
-            e.setEstado(rs.getString("estado"));
-            lista.add(e);
+            while (rs.next()) {
+                Equipo e = new Equipo();
+                e.setIdEquipo(rs.getInt("idEquipo"));
+                e.setCodigoEquipo(rs.getString("codigoEquipo"));
+                e.setTipo(rs.getString("tipo"));
+                e.setEstado(rs.getString("estado"));
+                lista.add(e);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
-    } catch (SQLException ex) {
-        ex.printStackTrace();
+        return lista;
     }
-    return lista;
 }
-}
+

@@ -7,47 +7,64 @@ import com.ticketsystem.util.DatabaseConnection;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+//Agregado
 import org.apache.commons.codec.digest.DigestUtils;
 
 public class UsuarioDAO implements IUsuarioDAO {
 
     public UsuarioDAO() {}
-public Usuario authenticate(String correo, String contrasena) {
 
-    //String sql = "SELECT * FROM usuario WHERE correo = ? AND contrasena = ?";
-    String sql = "SELECT * FROM usuario WHERE correo = ?";
+    /**
+     * Adapter para los tests: misma lógica que authenticate(...) pero con la firma que esperan.
+     * JUnit llama a este método.
+     */
+    public Usuario autenticar(String correo, String contrasena) {
+        // Normalización simple para evitar falsos negativos por espacios
+        String c = (correo == null) ? null : correo.trim();
+        String p = (contrasena == null) ? null : contrasena.trim();
 
-    try (Connection conn = DatabaseConnection.getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-
-        ps.setString(1, correo);
-        //ps.setString(2, contrasena);
-        ResultSet rs= ps.executeQuery();
-
-        if (rs.next()) {
-            Usuario u = new Usuario();
-            u.setIdUsuario(rs.getInt("idUsuario"));
-            u.setNombre(rs.getString("nombre"));
-            u.setApellido(rs.getString("apellido"));
-            u.setCorreo(rs.getString("correo"));
-            u.setContrasena(rs.getString("contrasena"));
-            u.setRol(rs.getString("rol"));
-            u.setArea(rs.getString("area"));
-            
-            // Encriptar la contraseña ingresada y comparar
-            String hashedInput = DigestUtils.sha256Hex(contrasena);
-            if (hashedInput.equals(u.getContrasena())) {
-                return u;
-            }
-        }
-
-    } catch (Exception e) {
-        e.printStackTrace();
+        // NO encriptar aquí - el método authenticate lo hará
+        return authenticate(c, p);
     }
 
-    return null;
-}
+    /**
+     * Método original (lo conservamos para compatibilidad con tu código actual).
+     */
+    public Usuario authenticate(String correo, String contrasena) {
+        String sql = "SELECT * FROM usuario WHERE correo = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, correo);
+            ResultSet rs = ps.executeQuery();
+
+            //Corregindo
+            if (rs.next()) {
+                Usuario u = new Usuario();
+                u.setIdUsuario(rs.getInt("idUsuario"));
+                u.setNombre(rs.getString("nombre"));
+                u.setApellido(rs.getString("apellido"));
+                u.setCorreo(rs.getString("correo"));
+                u.setContrasena(rs.getString("contrasena")); // Hash de la BD
+                u.setRol(rs.getString("rol"));
+                u.setArea(rs.getString("area"));
+
+                // Encriptar la contraseña ingresada y comparar con el hash de la BD -- Pedro Valeriano
+                String contrasenaEncriptada = DigestUtils.sha256Hex(contrasena);
+
+                if (contrasenaEncriptada.equals(u.getContrasena())) {
+                    return u;
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     // ============================================================
     // LISTAR CON PAGINACIÓN + FILTRO
     // ============================================================
@@ -71,17 +88,18 @@ public Usuario authenticate(String correo, String contrasena) {
             ps.setInt(6, size);
             ps.setInt(7, (page - 1) * size);
 
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Usuario u = new Usuario();
-                u.setIdUsuario(rs.getInt("idUsuario"));
-                u.setNombre(rs.getString("nombre"));
-                u.setApellido(rs.getString("apellido"));
-                u.setCorreo(rs.getString("correo"));
-                u.setContrasena(rs.getString("contrasena"));
-                u.setRol(rs.getString("rol"));
-                u.setArea(rs.getString("area"));
-                lista.add(u);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Usuario u = new Usuario();
+                    u.setIdUsuario(rs.getInt("idUsuario"));
+                    u.setNombre(rs.getString("nombre"));
+                    u.setApellido(rs.getString("apellido"));
+                    u.setCorreo(rs.getString("correo"));
+                    u.setContrasena(rs.getString("contrasena"));
+                    u.setRol(rs.getString("rol"));
+                    u.setArea(rs.getString("area"));
+                    lista.add(u);
+                }
             }
         }
         return lista;
@@ -105,8 +123,9 @@ public Usuario authenticate(String correo, String contrasena) {
             ps.setString(4, like);
             ps.setString(5, like);
 
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) return rs.getInt(1);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt(1);
+            }
         }
         return 0;
     }
@@ -123,17 +142,18 @@ public Usuario authenticate(String correo, String contrasena) {
 
             ps.setInt(1, id);
 
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                Usuario u = new Usuario();
-                u.setIdUsuario(rs.getInt("idUsuario"));
-                u.setNombre(rs.getString("nombre"));
-                u.setApellido(rs.getString("apellido"));
-                u.setCorreo(rs.getString("correo"));
-                u.setContrasena(rs.getString("contrasena"));
-                u.setRol(rs.getString("rol"));
-                u.setArea(rs.getString("area"));
-                return u;
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Usuario u = new Usuario();
+                    u.setIdUsuario(rs.getInt("idUsuario"));
+                    u.setNombre(rs.getString("nombre"));
+                    u.setApellido(rs.getString("apellido"));
+                    u.setCorreo(rs.getString("correo"));
+                    u.setContrasena(rs.getString("contrasena"));
+                    u.setRol(rs.getString("rol"));
+                    u.setArea(rs.getString("area"));
+                    return u;
+                }
             }
         }
         return null;
@@ -152,9 +172,9 @@ public Usuario authenticate(String correo, String contrasena) {
             cs.setString(1, u.getNombre());
             cs.setString(2, u.getApellido());
             cs.setString(3, u.getCorreo());
-            // Encriptar la contraseña antes de guardarla
+            // Encriptar la contraseña antes de actualizar
             String contrasenaEncriptada = DigestUtils.sha256Hex(u.getContrasena());
-            cs.setString(4, contrasenaEncriptada);
+            cs.setString(5, contrasenaEncriptada);
             cs.setString(5, u.getRol());
             cs.setString(6, u.getArea());
 
@@ -176,7 +196,9 @@ public Usuario authenticate(String correo, String contrasena) {
             cs.setString(2, u.getNombre());
             cs.setString(3, u.getApellido());
             cs.setString(4, u.getCorreo());
-            cs.setString(5, u.getContrasena());
+            // Encriptar la contraseña antes de actualizar
+            String contrasenaEncriptada = DigestUtils.sha256Hex(u.getContrasena());
+            cs.setString(5, contrasenaEncriptada);
             cs.setString(6, u.getRol());
             cs.setString(7, u.getArea());
 
@@ -231,37 +253,35 @@ public Usuario authenticate(String correo, String contrasena) {
     }
 
     // ============================================================
-    // LOGIN
+    // LOGIN / relación con Técnico por idUsuario
     // ============================================================
     public Tecnico buscarPorIdUsuario(int idUsuario) {
+        String sql = "SELECT t.idTecnico, t.nombre, t.idUsuario " +
+                     "FROM tecnico t " +
+                     "JOIN usuario u ON t.idUsuario = u.idUsuario " +
+                     "WHERE u.idUsuario = ?";
 
-    String sql = "SELECT t.idTecnico, t.nombre, t.idUsuario " +
-                 "FROM tecnico t " +
-                 "JOIN usuario u ON t.idUsuario = u.idUsuario " +
-                 "WHERE u.idUsuario = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-    try (Connection conn = DatabaseConnection.getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idUsuario);
 
-        ps.setInt(1, idUsuario);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Tecnico t = new Tecnico();
+                    t.setIdTecnico(rs.getInt("idTecnico"));
+                    t.setNombre(rs.getString("nombre"));
+                    t.setIdUsuario(rs.getInt("idUsuario"));
+                    return t;
+                }
+            }
 
-        ResultSet rs = ps.executeQuery();
-
-        if (rs.next()) {
-            Tecnico t = new Tecnico();
-            t.setIdTecnico(rs.getInt("idTecnico"));
-            t.setNombre(rs.getString("nombre"));
-            t.setIdUsuario(rs.getInt("idUsuario"));
-            return t;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return null;
     }
-
-    return null;
-}
-
 
     // ============================================================
     // LISTAR SOLO USUARIOS CON ROL TÉCNICO
@@ -282,7 +302,6 @@ public Usuario authenticate(String correo, String contrasena) {
                 u.setNombre(rs.getString("nombre"));
                 u.setApellido(rs.getString("apellido"));
                 u.setCorreo(rs.getString("correo"));
-
                 lista.add(u);
             }
 
@@ -293,3 +312,4 @@ public Usuario authenticate(String correo, String contrasena) {
         return lista;
     }
 }
+
