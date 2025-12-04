@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.ticketsystem.dao.IncidenciaDAOTest" time="0.193" tests="6" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.ticketsystem.dao.IncidenciaDAOTest" time="0.195" tests="6" errors="0" skipped="0" failures="0">
   <properties>
     <property name="netbeans.deploy" value="true"/>
     <property name="java.specification.version" value="24"/>
     <property name="sun.cpu.isalist" value="amd64"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
-    <property name="java.class.path" value="C:\GestionIncidencias\target\test-classes;C:\GestionIncidencias\target\classes;C:\Users\pvale\.m2\repository\javax\javaee-web-api\8.0\javaee-web-api-8.0.jar;C:\Users\pvale\.m2\repository\javax\servlet\jstl\1.2\jstl-1.2.jar;C:\Users\pvale\.m2\repository\com\mysql\mysql-connector-j\8.0.33\mysql-connector-j-8.0.33.jar;C:\Users\pvale\.m2\repository\com\google\protobuf\protobuf-java\3.21.9\protobuf-java-3.21.9.jar;C:\Users\pvale\.m2\repository\com\google\code\gson\gson\2.10.1\gson-2.10.1.jar;C:\Users\pvale\.m2\repository\org\apache\poi\poi-ooxml\5.2.5\poi-ooxml-5.2.5.jar;C:\Users\pvale\.m2\repository\org\apache\poi\poi\5.2.5\poi-5.2.5.jar;C:\Users\pvale\.m2\repository\commons-codec\commons-codec\1.16.0\commons-codec-1.16.0.jar;C:\Users\pvale\.m2\repository\org\apache\commons\commons-math3\3.6.1\commons-math3-3.6.1.jar;C:\Users\pvale\.m2\repository\com\zaxxer\SparseBitSet\1.3\SparseBitSet-1.3.jar;C:\Users\pvale\.m2\repository\org\apache\poi\poi-ooxml-lite\5.2.5\poi-ooxml-lite-5.2.5.jar;C:\Users\pvale\.m2\repository\org\apache\xmlbeans\xmlbeans\5.2.0\xmlbeans-5.2.0.jar;C:\Users\pvale\.m2\repository\org\apache\commons\commons-compress\1.25.0\commons-compress-1.25.0.jar;C:\Users\pvale\.m2\repository\commons-io\commons-io\2.15.0\commons-io-2.15.0.jar;C:\Users\pvale\.m2\repository\com\github\virtuald\curvesapi\1.08\curvesapi-1.08.jar;C:\Users\pvale\.m2\repository\org\apache\logging\log4j\log4j-api\2.21.1\log4j-api-2.21.1.jar;C:\Users\pvale\.m2\repository\org\apache\commons\commons-collections4\4.4\commons-collections4-4.4.jar;C:\Users\pvale\.m2\repository\com\itextpdf\itextpdf\5.5.13.3\itextpdf-5.5.13.3.jar;C:\Users\pvale\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.2\junit-jupiter-api-5.10.2.jar;C:\Users\pvale\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\pvale\.m2\repository\org\junit\platform\junit-platform-commons\1.10.2\junit-platform-commons-1.10.2.jar;C:\Users\pvale\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\pvale\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.2\junit-jupiter-params-5.10.2.jar;C:\Users\pvale\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.2\junit-jupiter-engine-5.10.2.jar;C:\Users\pvale\.m2\repository\org\junit\platform\junit-platform-engine\1.10.2\junit-platform-engine-1.10.2.jar;"/>
+    <property name="java.class.path" value="C:\GestionIncidencias\target\test-classes;C:\GestionIncidencias\target\classes;C:\Users\pvale\.m2\repository\javax\javaee-web-api\8.0\javaee-web-api-8.0.jar;C:\Users\pvale\.m2\repository\javax\servlet\jstl\1.2\jstl-1.2.jar;C:\Users\pvale\.m2\repository\com\mysql\mysql-connector-j\8.0.33\mysql-connector-j-8.0.33.jar;C:\Users\pvale\.m2\repository\com\google\protobuf\protobuf-java\3.21.9\protobuf-java-3.21.9.jar;C:\Users\pvale\.m2\repository\com\google\code\gson\gson\2.10.1\gson-2.10.1.jar;C:\Users\pvale\.m2\repository\org\apache\poi\poi-ooxml\5.2.5\poi-ooxml-5.2.5.jar;C:\Users\pvale\.m2\repository\org\apache\poi\poi\5.2.5\poi-5.2.5.jar;C:\Users\pvale\.m2\repository\commons-codec\commons-codec\1.16.0\commons-codec-1.16.0.jar;C:\Users\pvale\.m2\repository\org\apache\commons\commons-math3\3.6.1\commons-math3-3.6.1.jar;C:\Users\pvale\.m2\repository\com\zaxxer\SparseBitSet\1.3\SparseBitSet-1.3.jar;C:\Users\pvale\.m2\repository\org\apache\poi\poi-ooxml-lite\5.2.5\poi-ooxml-lite-5.2.5.jar;C:\Users\pvale\.m2\repository\org\apache\xmlbeans\xmlbeans\5.2.0\xmlbeans-5.2.0.jar;C:\Users\pvale\.m2\repository\org\apache\commons\commons-compress\1.25.0\commons-compress-1.25.0.jar;C:\Users\pvale\.m2\repository\commons-io\commons-io\2.15.0\commons-io-2.15.0.jar;C:\Users\pvale\.m2\repository\com\github\virtuald\curvesapi\1.08\curvesapi-1.08.jar;C:\Users\pvale\.m2\repository\org\apache\logging\log4j\log4j-api\2.21.1\log4j-api-2.21.1.jar;C:\Users\pvale\.m2\repository\org\apache\commons\commons-collections4\4.4\commons-collections4-4.4.jar;C:\Users\pvale\.m2\repository\com\itextpdf\itextpdf\5.5.13.3\itextpdf-5.5.13.3.jar;C:\Users\pvale\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.2\junit-jupiter-api-5.10.2.jar;C:\Users\pvale\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\pvale\.m2\repository\org\junit\platform\junit-platform-commons\1.10.2\junit-platform-commons-1.10.2.jar;C:\Users\pvale\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\pvale\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.2\junit-jupiter-params-5.10.2.jar;C:\Users\pvale\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.2\junit-jupiter-engine-5.10.2.jar;C:\Users\pvale\.m2\repository\org\junit\platform\junit-platform-engine\1.10.2\junit-platform-engine-1.10.2.jar;C:\Users\pvale\.m2\repository\com\sun\mail\javax.mail\1.6.2\javax.mail-1.6.2.jar;C:\Users\pvale\.m2\repository\javax\activation\activation\1.1\activation-1.1.jar;C:\Users\pvale\.m2\repository\org\apache\commons\commons-lang3\3.12.0\commons-lang3-3.12.0.jar;"/>
     <property name="java.vm.vendor" value="Azul Systems, Inc."/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="user.variant" value=""/>
@@ -17,10 +17,10 @@
     <property name="user.country" value="PE"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Apache NetBeans\jdk\bin"/>
-    <property name="sun.java.command" value="C:\Users\pvale\AppData\Local\Temp\surefire9275997269217619415\surefirebooter-20251201233833834_3.jar C:\Users\pvale\AppData\Local\Temp\surefire9275997269217619415 2025-12-01T23-38-33_561-jvmRun1 surefire-20251201233833834_1tmp surefire_0-20251201233833834_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\pvale\AppData\Local\Temp\surefire1181862107317236161\surefirebooter-20251204150502453_3.jar C:\Users\pvale\AppData\Local\Temp\surefire1181862107317236161 2025-12-04T15-05-02_169-jvmRun1 surefire-20251204150502453_1tmp surefire_0-20251204150502453_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="exec.vmArgs" value=""/>
-    <property name="surefire.test.class.path" value="C:\GestionIncidencias\target\test-classes;C:\GestionIncidencias\target\classes;C:\Users\pvale\.m2\repository\javax\javaee-web-api\8.0\javaee-web-api-8.0.jar;C:\Users\pvale\.m2\repository\javax\servlet\jstl\1.2\jstl-1.2.jar;C:\Users\pvale\.m2\repository\com\mysql\mysql-connector-j\8.0.33\mysql-connector-j-8.0.33.jar;C:\Users\pvale\.m2\repository\com\google\protobuf\protobuf-java\3.21.9\protobuf-java-3.21.9.jar;C:\Users\pvale\.m2\repository\com\google\code\gson\gson\2.10.1\gson-2.10.1.jar;C:\Users\pvale\.m2\repository\org\apache\poi\poi-ooxml\5.2.5\poi-ooxml-5.2.5.jar;C:\Users\pvale\.m2\repository\org\apache\poi\poi\5.2.5\poi-5.2.5.jar;C:\Users\pvale\.m2\repository\commons-codec\commons-codec\1.16.0\commons-codec-1.16.0.jar;C:\Users\pvale\.m2\repository\org\apache\commons\commons-math3\3.6.1\commons-math3-3.6.1.jar;C:\Users\pvale\.m2\repository\com\zaxxer\SparseBitSet\1.3\SparseBitSet-1.3.jar;C:\Users\pvale\.m2\repository\org\apache\poi\poi-ooxml-lite\5.2.5\poi-ooxml-lite-5.2.5.jar;C:\Users\pvale\.m2\repository\org\apache\xmlbeans\xmlbeans\5.2.0\xmlbeans-5.2.0.jar;C:\Users\pvale\.m2\repository\org\apache\commons\commons-compress\1.25.0\commons-compress-1.25.0.jar;C:\Users\pvale\.m2\repository\commons-io\commons-io\2.15.0\commons-io-2.15.0.jar;C:\Users\pvale\.m2\repository\com\github\virtuald\curvesapi\1.08\curvesapi-1.08.jar;C:\Users\pvale\.m2\repository\org\apache\logging\log4j\log4j-api\2.21.1\log4j-api-2.21.1.jar;C:\Users\pvale\.m2\repository\org\apache\commons\commons-collections4\4.4\commons-collections4-4.4.jar;C:\Users\pvale\.m2\repository\com\itextpdf\itextpdf\5.5.13.3\itextpdf-5.5.13.3.jar;C:\Users\pvale\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.2\junit-jupiter-api-5.10.2.jar;C:\Users\pvale\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\pvale\.m2\repository\org\junit\platform\junit-platform-commons\1.10.2\junit-platform-commons-1.10.2.jar;C:\Users\pvale\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\pvale\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.2\junit-jupiter-params-5.10.2.jar;C:\Users\pvale\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.2\junit-jupiter-engine-5.10.2.jar;C:\Users\pvale\.m2\repository\org\junit\platform\junit-platform-engine\1.10.2\junit-platform-engine-1.10.2.jar;"/>
+    <property name="surefire.test.class.path" value="C:\GestionIncidencias\target\test-classes;C:\GestionIncidencias\target\classes;C:\Users\pvale\.m2\repository\javax\javaee-web-api\8.0\javaee-web-api-8.0.jar;C:\Users\pvale\.m2\repository\javax\servlet\jstl\1.2\jstl-1.2.jar;C:\Users\pvale\.m2\repository\com\mysql\mysql-connector-j\8.0.33\mysql-connector-j-8.0.33.jar;C:\Users\pvale\.m2\repository\com\google\protobuf\protobuf-java\3.21.9\protobuf-java-3.21.9.jar;C:\Users\pvale\.m2\repository\com\google\code\gson\gson\2.10.1\gson-2.10.1.jar;C:\Users\pvale\.m2\repository\org\apache\poi\poi-ooxml\5.2.5\poi-ooxml-5.2.5.jar;C:\Users\pvale\.m2\repository\org\apache\poi\poi\5.2.5\poi-5.2.5.jar;C:\Users\pvale\.m2\repository\commons-codec\commons-codec\1.16.0\commons-codec-1.16.0.jar;C:\Users\pvale\.m2\repository\org\apache\commons\commons-math3\3.6.1\commons-math3-3.6.1.jar;C:\Users\pvale\.m2\repository\com\zaxxer\SparseBitSet\1.3\SparseBitSet-1.3.jar;C:\Users\pvale\.m2\repository\org\apache\poi\poi-ooxml-lite\5.2.5\poi-ooxml-lite-5.2.5.jar;C:\Users\pvale\.m2\repository\org\apache\xmlbeans\xmlbeans\5.2.0\xmlbeans-5.2.0.jar;C:\Users\pvale\.m2\repository\org\apache\commons\commons-compress\1.25.0\commons-compress-1.25.0.jar;C:\Users\pvale\.m2\repository\commons-io\commons-io\2.15.0\commons-io-2.15.0.jar;C:\Users\pvale\.m2\repository\com\github\virtuald\curvesapi\1.08\curvesapi-1.08.jar;C:\Users\pvale\.m2\repository\org\apache\logging\log4j\log4j-api\2.21.1\log4j-api-2.21.1.jar;C:\Users\pvale\.m2\repository\org\apache\commons\commons-collections4\4.4\commons-collections4-4.4.jar;C:\Users\pvale\.m2\repository\com\itextpdf\itextpdf\5.5.13.3\itextpdf-5.5.13.3.jar;C:\Users\pvale\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.2\junit-jupiter-api-5.10.2.jar;C:\Users\pvale\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\pvale\.m2\repository\org\junit\platform\junit-platform-commons\1.10.2\junit-platform-commons-1.10.2.jar;C:\Users\pvale\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\pvale\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.2\junit-jupiter-params-5.10.2.jar;C:\Users\pvale\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.2\junit-jupiter-engine-5.10.2.jar;C:\Users\pvale\.m2\repository\org\junit\platform\junit-platform-engine\1.10.2\junit-platform-engine-1.10.2.jar;C:\Users\pvale\.m2\repository\com\sun\mail\javax.mail\1.6.2\javax.mail-1.6.2.jar;C:\Users\pvale\.m2\repository\javax\activation\activation\1.1\activation-1.1.jar;C:\Users\pvale\.m2\repository\org\apache\commons\commons-lang3\3.12.0\commons-lang3-3.12.0.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="C:\Users\pvale"/>
     <property name="user.language" value="es"/>
@@ -33,7 +33,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\pvale\AppData\Local\Temp\surefire9275997269217619415\surefirebooter-20251201233833834_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\pvale\AppData\Local\Temp\surefire1181862107317236161\surefirebooter-20251204150502453_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="24.0.2+12"/>
@@ -63,20 +63,20 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="68.0"/>
   </properties>
-  <testcase name="testBuscarIncidenciaPorIdInexistente" classname="com.ticketsystem.dao.IncidenciaDAOTest" time="0.011">
+  <testcase name="testBuscarIncidenciaPorIdInexistente" classname="com.ticketsystem.dao.IncidenciaDAOTest" time="0.01">
     <system-out><![CDATA[✅ Driver MySQL cargado correctamente
 ✅ Conectado correctamente a la base de datos
 PI006 OK - Búsqueda por ID inexistente.
 ]]></system-out>
   </testcase>
-  <testcase name="testRegistrarIncidenciaCorrecta" classname="com.ticketsystem.dao.IncidenciaDAOTest" time="0.038">
+  <testcase name="testRegistrarIncidenciaCorrecta" classname="com.ticketsystem.dao.IncidenciaDAOTest" time="0.043">
     <system-out><![CDATA[✅ Driver MySQL cargado correctamente
 ✅ Conectado correctamente a la base de datos
 ✅ Driver MySQL cargado correctamente
 ✅ Conectado correctamente a la base de datos
 ✅ Driver MySQL cargado correctamente
 ✅ Conectado correctamente a la base de datos
-Incidencia creada para prueba: id=74, desc=INCIDENCIA JUNIT OK
+Incidencia creada para prueba: id=90, desc=INCIDENCIA JUNIT OK
 ✅ Driver MySQL cargado correctamente
 ✅ Conectado correctamente a la base de datos
 PI001 OK - Registrar incidencia correcta.
@@ -87,13 +87,13 @@ PI001 OK - Registrar incidencia correcta.
 ✅ Conectado correctamente a la base de datos
 ✅ Driver MySQL cargado correctamente
 ✅ Conectado correctamente a la base de datos
-Incidencia creada para prueba: id=75, desc=INC JUNIT BUSCAR POR ID
+Incidencia creada para prueba: id=91, desc=INC JUNIT BUSCAR POR ID
 ✅ Driver MySQL cargado correctamente
 ✅ Conectado correctamente a la base de datos
 PI005 OK - Búsqueda por ID existente.
 ]]></system-out>
   </testcase>
-  <testcase name="testRegistrarIncidenciaSinDescripcion" classname="com.ticketsystem.dao.IncidenciaDAOTest" time="0.008">
+  <testcase name="testRegistrarIncidenciaSinDescripcion" classname="com.ticketsystem.dao.IncidenciaDAOTest" time="0.01">
     <system-out><![CDATA[✅ Driver MySQL cargado correctamente
 ✅ Conectado correctamente a la base de datos
 ✅ Driver MySQL cargado correctamente
@@ -101,12 +101,12 @@ PI005 OK - Búsqueda por ID existente.
 PI002 OK - No se registran incidencias sin descripción.
 ]]></system-out>
   </testcase>
-  <testcase name="testCerrarIncidencia" classname="com.ticketsystem.dao.IncidenciaDAOTest" time="0.049">
+  <testcase name="testCerrarIncidencia" classname="com.ticketsystem.dao.IncidenciaDAOTest" time="0.038">
     <system-out><![CDATA[✅ Driver MySQL cargado correctamente
 ✅ Conectado correctamente a la base de datos
 ✅ Driver MySQL cargado correctamente
 ✅ Conectado correctamente a la base de datos
-Incidencia creada para prueba: id=76, desc=INC JUNIT ESTADO CERRADO
+Incidencia creada para prueba: id=92, desc=INC JUNIT ESTADO CERRADO
 ✅ Driver MySQL cargado correctamente
 ✅ Conectado correctamente a la base de datos
 ✅ Driver MySQL cargado correctamente
@@ -114,12 +114,12 @@ Incidencia creada para prueba: id=76, desc=INC JUNIT ESTADO CERRADO
 PI004 OK - Cierre de incidencia.
 ]]></system-out>
   </testcase>
-  <testcase name="testCambiarEstadoEnProceso" classname="com.ticketsystem.dao.IncidenciaDAOTest" time="0.042">
+  <testcase name="testCambiarEstadoEnProceso" classname="com.ticketsystem.dao.IncidenciaDAOTest" time="0.045">
     <system-out><![CDATA[✅ Driver MySQL cargado correctamente
 ✅ Conectado correctamente a la base de datos
 ✅ Driver MySQL cargado correctamente
 ✅ Conectado correctamente a la base de datos
-Incidencia creada para prueba: id=77, desc=INC JUNIT ESTADO EN PROCESO
+Incidencia creada para prueba: id=93, desc=INC JUNIT ESTADO EN PROCESO
 ✅ Driver MySQL cargado correctamente
 ✅ Conectado correctamente a la base de datos
 ✅ Driver MySQL cargado correctamente

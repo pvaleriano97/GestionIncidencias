@@ -5,14 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Iniciar Sesión</title>
-
-    <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-
-    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-    <!-- CSS principal -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
 </head>
 <body class="login-body">
@@ -37,12 +31,12 @@
                 <input type="password" id="contrasena" name="contrasena" required class="form-control">
             </div>
 
-            <div class="remember">
-                <input class="form-check-input" type="checkbox" name="remember" id="rememberMe">
+            <div class="remember mb-3">
+                <input class="form-check-input" type="checkbox" name="rememberMe" id="rememberMe">
                 <label class="form-check-label" for="rememberMe">Mantener sesión iniciada</label>
             </div>
 
-            <button type="submit" class="login-button">Ingresar</button>
+            <button type="submit" class="login-button w-100">Ingresar</button>
 
             <!-- Mensajes -->
             <c:if test="${not empty error}">
@@ -51,6 +45,14 @@
             <c:if test="${not empty mensaje}">
                 <div class="alert alert-success mt-3 text-center">${mensaje}</div>
             </c:if>
+            
+            <!-- Info 2FA -->
+            <div class="alert alert-info mt-3 text-center">
+                <small>
+                    <i class="fas fa-shield-alt me-1"></i>
+                    Después de ingresar credenciales, se te pedirá un código de verificación
+                </small>
+            </div>
         </form>
     </div>
 </div>
