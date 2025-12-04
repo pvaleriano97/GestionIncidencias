@@ -7,57 +7,94 @@
 <head>
     <meta charset="UTF-8">
     <title>Dashboard - Sistema de Tickets</title>
-    <!-- CSS principal unificado -->
+
+    <!-- CSS general -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Íconos -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body class="dashboard-body">
 
 <div class="dashboard-container">
 
     <!-- Sidebar -->
-    <jsp:include page="menu.jsp" />
+    <jsp:include page="menu.jsp"/>
 
-    <!-- Main content -->
+    <!-- CONTENIDO PRINCIPAL -->
     <div class="main-content">
-        <jsp:include page="header.jsp" />
+
+        <!-- HEADER -->
+        <jsp:include page="header.jsp"/>
 
         <div class="page-container">
-            <h1>Dashboard de Incidencias</h1>
 
-            <!-- Tarjetas de resumen -->
+            <!-- ========================== -->
+            <!-- TARJETAS DEL DASHBOARD     -->
+            <!-- ========================== -->
             <div class="dashboard-cards">
-                <div class="card">
-                    <h3>Total Incidencias</h3>
-                    <p>${totalIncidencias}</p>
+
+                <div class="card card-stats">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-ticket"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3>Total Incidencias</h3>
+                        <p>${totalIncidencias}</p>
+                    </div>
                 </div>
-                <div class="card">
-                    <h3>Incidencias Abiertas</h3>
-                    <p>${abiertas}</p>
+
+                <div class="card card-stats">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3>Abiertas</h3>
+                        <p>${abiertas}</p>
+                    </div>
                 </div>
-                <div class="card">
-                    <h3>Incidencias Cerradas</h3>
-                    <p>${cerradas}</p>
+
+                <div class="card card-stats">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-check-circle"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3>Cerradas</h3>
+                        <p>${cerradas}</p>
+                    </div>
                 </div>
-                <div class="card">
-                    <h3>Incidencias en Proceso</h3>
-                    <p>${enProceso}</p>
+
+                <div class="card card-stats">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-spinner"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3>En Proceso</h3>
+                        <p>${enProceso}</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- Top 5 técnicos con más incidencias cerradas -->
-            <h2>Top 5 Técnicos</h2>
-            <table class="ticket-table">
-                <thead>
+            <!-- ========================== -->
+            <!-- TOP 5 TÉCNICOS              -->
+            <!-- ========================== -->
+            <div class="section-title">
+                <i class="fa-solid fa-user-gear"></i> Top 5 Técnicos
+            </div>
+
+            <div class="table-container">
+                <table class="ticket-table modern-table">
+                    <thead>
                     <tr>
                         <th>ID</th>
                         <th>Nombre</th>
                         <th>Especialidad</th>
-                        <th>Tickets Cerrados</th>
+                        <th>Cerrados</th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     <c:forEach var="tec" items="${topTecnicos}">
                         <tr>
                             <td>${tec.idTecnico}</td>
@@ -66,13 +103,20 @@
                             <td>${tec.ticketsCerrados}</td>
                         </tr>
                     </c:forEach>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
 
-            <!-- Últimas 5 incidencias -->
-            <h2>Últimas Incidencias</h2>
-            <table class="ticket-table">
-                <thead>
+            <!-- ========================== -->
+            <!-- ÚLTIMAS INCIDENCIAS         -->
+            <!-- ========================== -->
+            <div class="section-title">
+                <i class="fa-solid fa-clock-rotate-left"></i> Últimas Incidencias
+            </div>
+
+            <div class="table-container">
+                <table class="ticket-table modern-table">
+                    <thead>
                     <tr>
                         <th>ID</th>
                         <th>Descripción</th>
@@ -82,8 +126,8 @@
                         <th>Equipo</th>
                         <th>Fecha</th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     <c:forEach var="inc" items="${ultimasIncidencias}">
                         <tr>
                             <td>${inc.idIncidencia}</td>
@@ -95,13 +139,20 @@
                             <td><fmt:formatDate value="${inc.fechaRegistro}" pattern="dd/MM/yyyy HH:mm"/></td>
                         </tr>
                     </c:forEach>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
 
-            <!-- Incidencias en proceso -->
-            <h2>Incidencias en Proceso</h2>
-            <table class="ticket-table">
-                <thead>
+            <!-- ========================== -->
+            <!-- INCIDENCIAS EN PROCESO      -->
+            <!-- ========================== -->
+            <div class="section-title">
+                <i class="fa-solid fa-spinner"></i> Incidencias en Proceso
+            </div>
+
+            <div class="table-container">
+                <table class="ticket-table modern-table">
+                    <thead>
                     <tr>
                         <th>ID</th>
                         <th>Descripción</th>
@@ -111,8 +162,8 @@
                         <th>Equipo</th>
                         <th>Fecha</th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     <c:forEach var="inc" items="${incidenciasEnProceso}">
                         <tr>
                             <td>${inc.idIncidencia}</td>
@@ -124,8 +175,9 @@
                             <td><fmt:formatDate value="${inc.fechaRegistro}" pattern="dd/MM/yyyy HH:mm"/></td>
                         </tr>
                     </c:forEach>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
 
         </div>
     </div>

@@ -1,95 +1,155 @@
-package com.ticketsystem.servlets;
+package com.tu.paquete;
 
-import com.ticketsystem.dao.*;
-import com.ticketsystem.model.*;
+import com.ticketsystem.model.Incidencia;
 import javax.servlet.*;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
+import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.util.List;
+
+import com.ticketsystem.dao.*;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import com.ticketsystem.model.*;
 
 @WebServlet("/IncidenciaServlet")
 public class IncidenciaServlet extends HttpServlet {
 
-    private IncidenciaDAO dao = new IncidenciaDAO();
+    private IncidenciaDAO incidenciaDAO = new IncidenciaDAO();
     private UsuarioDAO usuarioDAO = new UsuarioDAO();
-    private EquipoDAO equipoDAO = new EquipoDAO();
     private TecnicoDAO tecnicoDAO = new TecnicoDAO();
-
-    private static final int REGISTROS_POR_PAGINA = 5;
+    private EquipoDAO equipoDAO = new EquipoDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String action = request.getParameter("action");
-        String search = request.getParameter("search") != null ? request.getParameter("search") : "";
-        int pagina = 1;
-        try { pagina = Integer.parseInt(request.getParameter("pagina")); } catch (Exception e) {}
 
-        // Editar incidencia
         if ("edit".equals(action)) {
-            int id = Integer.parseInt(request.getParameter("id"));
-            Incidencia incidenciaEdit = dao.obtenerPorId(id);
-            request.setAttribute("incidenciaEdit", incidenciaEdit);
+            cargarIncidenciaEditar(request);
+        } else if ("delete".equals(action)) {
+            eliminarIncidencia(request);
         }
 
-        // Eliminar incidencia
-        if ("delete".equals(action)) {
-            int id = Integer.parseInt(request.getParameter("id"));
-            dao.eliminar(id);
-            response.sendRedirect("IncidenciaServlet");
-            return;
-        }
-
-        // Listar combos
-        request.setAttribute("listaUsuarios", usuarioDAO.listar());
-        request.setAttribute("listaEquipos", equipoDAO.listar());
-        request.setAttribute("listaTecnicos", tecnicoDAO.listar());
-
-        // Listado con paginación
-        int totalRegistros = dao.contarRegistros(search);
-        int totalPaginas = (int) Math.ceil(totalRegistros * 1.0 / REGISTROS_POR_PAGINA);
-        int offset = (pagina - 1) * REGISTROS_POR_PAGINA;
-        List<Incidencia> lista = dao.listar(search, offset, REGISTROS_POR_PAGINA);
-
-        request.setAttribute("listaIncidencias", lista);
-        request.setAttribute("totalPaginas", totalPaginas);
-        request.setAttribute("paginaActual", pagina);
-        request.setAttribute("search", search);
-
-        // Para menú activo
-        request.setAttribute("page", "incidencias");
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/views/incidencia.jsp");
-        dispatcher.forward(request, response);
+        cargarDatosVista(request);
+        request.getRequestDispatcher("/views/incidencia.jsp").forward(request, response);
     }
 
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String idStr = request.getParameter("idIncidencia");
-        String descripcion = request.getParameter("descripcion");
-        String estado = request.getParameter("estado");
-        String idUsuarioStr = request.getParameter("idUsuario");
-        String idEquipoStr = request.getParameter("idEquipo");
-        String idTecnicoStr = request.getParameter("idTecnico");
+        registrarOActualizar(request);
+        cargarDatosVista(request);
+        request.getRequestDispatcher("/views/incidencia.jsp").forward(request, response);
+    }
 
-        Incidencia i = new Incidencia();
-        i.setDescripcion(descripcion);
-        i.setEstado(estado);
-        i.setIdUsuario(Integer.parseInt(idUsuarioStr));
-        i.setIdEquipo(Integer.parseInt(idEquipoStr));
-        i.setIdTecnico((idTecnicoStr == null || idTecnicoStr.isEmpty()) ? null : Integer.parseInt(idTecnicoStr));
+    // =====================================================
+    // Cargar incidencia para editar
+    // =====================================================
+    private void cargarIncidenciaEditar(HttpServletRequest request) {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Incidencia incidencia = incidenciaDAO.obtenerPorId(id);
+        request.setAttribute("incidenciaEdit", incidencia);
+    }
 
-        if (idStr == null || idStr.isEmpty()) {
-            dao.insertar(i);
-        } else {
-            i.setIdIncidencia(Integer.parseInt(idStr));
-            dao.actualizar(i);
+    // =====================================================
+    // Eliminar incidencia
+    // =====================================================
+    private void eliminarIncidencia(HttpServletRequest request) {
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
+            incidenciaDAO.eliminar(id);
+            request.setAttribute("exitoMensaje", "Incidencia eliminada correctamente.");
+        } catch (Exception e) {
+            request.setAttribute("errorMensaje", "No se pudo eliminar la incidencia.");
+        }
+    }
+
+    // =====================================================
+    // Registrar o actualizar
+    // =====================================================
+    private void registrarOActualizar(HttpServletRequest request) {
+
+        try {
+            String idIncStr = request.getParameter("idIncidencia");
+
+            Incidencia i = new Incidencia();
+            i.setDescripcion(request.getParameter("descripcion"));
+            i.setEstado(request.getParameter("estado"));
+            i.setIdUsuario(Integer.parseInt(request.getParameter("idUsuario")));
+            i.setIdEquipo(Integer.parseInt(request.getParameter("idEquipo")));
+            i.setIdTecnico(Integer.parseInt(request.getParameter("idTecnico")));
+
+            if (idIncStr != null && !idIncStr.isEmpty()) {
+                i.setIdIncidencia(Integer.parseInt(idIncStr));
+                incidenciaDAO.actualizar(i);
+                request.setAttribute("exitoMensaje", "Incidencia actualizada correctamente.");
+            } else {
+                incidenciaDAO.insertar(i);
+                request.setAttribute("exitoMensaje", "Incidencia registrada correctamente.");
+            }
+
+        } catch (Exception e) {
+            request.setAttribute("errorMensaje", "Error al guardar la incidencia.");
+        }
+    }
+
+    // =====================================================
+    // Cargar combos + paginación + búsqueda + lista
+    // =====================================================
+    private void cargarDatosVista(HttpServletRequest request) {
+
+        HttpSession session = request.getSession();
+        String rol = (String) session.getAttribute("role");
+        Integer idTecnico = (Integer) session.getAttribute("idTecnico");
+
+        // ==========================
+        // BÚSQUEDA
+        // ==========================
+        String search = request.getParameter("search");
+        if (search == null) search = "";
+        request.setAttribute("search", search);
+
+        // ==========================
+        // PAGINACIÓN
+        // ==========================
+        int pagina = 1;
+        int regXpag = 5;
+
+        if (request.getParameter("pagina") != null) {
+            try {
+                pagina = Integer.parseInt(request.getParameter("pagina"));
+            } catch (Exception ignored) {}
         }
 
-        response.sendRedirect("IncidenciaServlet");
+        List<Incidencia> lista;
+        int totalRegistros;
+
+        // ==========================
+        // FILTRO por rol
+        // ==========================
+        if ("admin".equals(rol)) {
+            lista = incidenciaDAO.listar(search, pagina, regXpag);
+            totalRegistros = incidenciaDAO.contar(search);
+        } else {
+            lista = incidenciaDAO.listarPorTecnico(idTecnico, search, pagina, regXpag);
+            totalRegistros = incidenciaDAO.contarPorTecnico(idTecnico, search);
+        }
+
+        int totalPaginas = (int) Math.ceil((double) totalRegistros / regXpag);
+
+        request.setAttribute("listaIncidencias", lista);
+        request.setAttribute("paginaActual", pagina);
+        request.setAttribute("totalPaginas", totalPaginas);
+
+        // ==========================
+        // COMB
+        // ==========================
+        request.setAttribute("listaUsuarios", usuarioDAO.listar());
+        request.setAttribute("listaTecnicos", tecnicoDAO.listar());
+        request.setAttribute("listaEquipos", equipoDAO.listar());
     }
 }
