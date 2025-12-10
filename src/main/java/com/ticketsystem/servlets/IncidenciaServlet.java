@@ -34,6 +34,17 @@ public class IncidenciaServlet extends HttpServlet {
             eliminarIncidencia(request);
         }
 
+      // Mensajes desde sesión (toast)
+        HttpSession session = request.getSession();
+        if (session.getAttribute("exitoMensaje") != null) {
+            request.setAttribute("exitoMensaje", session.getAttribute("exitoMensaje"));
+            session.removeAttribute("exitoMensaje");
+        }
+        if (session.getAttribute("errorMensaje") != null) {
+            request.setAttribute("errorMensaje", session.getAttribute("errorMensaje"));
+            session.removeAttribute("errorMensaje");
+        }
+
         cargarDatosVista(request);
         request.getRequestDispatcher("/views/incidencia.jsp").forward(request, response);
     }
@@ -42,36 +53,43 @@ public class IncidenciaServlet extends HttpServlet {
             throws ServletException, IOException {
 
         registrarOActualizar(request);
-        cargarDatosVista(request);
-        request.getRequestDispatcher("/views/incidencia.jsp").forward(request, response);
+          response.sendRedirect(request.getContextPath() + "/IncidenciaServlet");
     }
 
     // =====================================================
     // Cargar incidencia para editar
     // =====================================================
-    private void cargarIncidenciaEditar(HttpServletRequest request) {
-        int id = Integer.parseInt(request.getParameter("id"));
-        Incidencia incidencia = incidenciaDAO.obtenerPorId(id);
-        request.setAttribute("incidenciaEdit", incidencia);
+       private void cargarIncidenciaEditar(HttpServletRequest request) {
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
+            Incidencia incidencia = incidenciaDAO.obtenerPorId(id);
+            request.setAttribute("incidenciaEdit", incidencia);
+        } catch (Exception e) {
+            request.setAttribute("errorMensaje", "No se pudo cargar la incidencia.");
+        }
     }
 
     // =====================================================
     // Eliminar incidencia
     // =====================================================
     private void eliminarIncidencia(HttpServletRequest request) {
+         HttpSession session = request.getSession();
+
         try {
             int id = Integer.parseInt(request.getParameter("id"));
             incidenciaDAO.eliminar(id);
-            request.setAttribute("exitoMensaje", "Incidencia eliminada correctamente.");
+            session.setAttribute("exitoMensaje", "Incidencia eliminada correctamente.");
         } catch (Exception e) {
-            request.setAttribute("errorMensaje", "No se pudo eliminar la incidencia.");
+            session.setAttribute("errorMensaje", "No se pudo eliminar la incidencia.");
         }
     }
 
     // =====================================================
     // Registrar o actualizar
     // =====================================================
-    private void registrarOActualizar(HttpServletRequest request) {
+   private void registrarOActualizar(HttpServletRequest request) {
+
+        HttpSession session = request.getSession();
 
         try {
             String idIncStr = request.getParameter("idIncidencia");
@@ -86,21 +104,22 @@ public class IncidenciaServlet extends HttpServlet {
             if (idIncStr != null && !idIncStr.isEmpty()) {
                 i.setIdIncidencia(Integer.parseInt(idIncStr));
                 incidenciaDAO.actualizar(i);
-                request.setAttribute("exitoMensaje", "Incidencia actualizada correctamente.");
+                session.setAttribute("exitoMensaje", "Incidencia actualizada correctamente.");
             } else {
                 incidenciaDAO.insertar(i);
-                request.setAttribute("exitoMensaje", "Incidencia registrada correctamente.");
+                session.setAttribute("exitoMensaje", "Incidencia registrada correctamente.");
             }
 
         } catch (Exception e) {
-            request.setAttribute("errorMensaje", "Error al guardar la incidencia.");
+            session.setAttribute("errorMensaje", "Error al guardar la incidencia.");
         }
     }
+
 
     // =====================================================
     // Cargar combos + paginación + búsqueda + lista
     // =====================================================
-    private void cargarDatosVista(HttpServletRequest request) {
+   private void cargarDatosVista(HttpServletRequest request) {
 
         HttpSession session = request.getSession();
         String rol = (String) session.getAttribute("role");
@@ -117,36 +136,36 @@ public class IncidenciaServlet extends HttpServlet {
         // PAGINACIÓN
         // ==========================
         int pagina = 1;
-        int regXpag = 5;
+        int registrosPorPagina = 10;
 
-        if (request.getParameter("pagina") != null) {
-            try {
+        try {
+            if (request.getParameter("pagina") != null) {
                 pagina = Integer.parseInt(request.getParameter("pagina"));
-            } catch (Exception ignored) {}
-        }
+            }
+        } catch (Exception ignored) {}
 
         List<Incidencia> lista;
         int totalRegistros;
 
         // ==========================
-        // FILTRO por rol
+        // FILTRO POR ROL
         // ==========================
         if ("admin".equals(rol)) {
-            lista = incidenciaDAO.listar(search, pagina, regXpag);
+            lista = incidenciaDAO.listar(search, pagina, registrosPorPagina);
             totalRegistros = incidenciaDAO.contar(search);
         } else {
-            lista = incidenciaDAO.listarPorTecnico(idTecnico, search, pagina, regXpag);
+            lista = incidenciaDAO.listarPorTecnico(idTecnico, search, pagina, registrosPorPagina);
             totalRegistros = incidenciaDAO.contarPorTecnico(idTecnico, search);
         }
 
-        int totalPaginas = (int) Math.ceil((double) totalRegistros / regXpag);
+        int totalPaginas = (int) Math.ceil((double) totalRegistros / registrosPorPagina);
 
         request.setAttribute("listaIncidencias", lista);
         request.setAttribute("paginaActual", pagina);
         request.setAttribute("totalPaginas", totalPaginas);
 
         // ==========================
-        // COMB
+        // COMBOS
         // ==========================
         request.setAttribute("listaUsuarios", usuarioDAO.listar());
         request.setAttribute("listaTecnicos", tecnicoDAO.listar());

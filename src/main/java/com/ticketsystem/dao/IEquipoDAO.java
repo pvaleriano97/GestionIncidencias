@@ -36,4 +36,5 @@ public interface IEquipoDAO {
     boolean eliminar(int id) throws Exception;
     
       List<Equipo> listar();  
+         public boolean existeCodigoEquipo(String codigo, int idEquipo)throws Exception;
 }

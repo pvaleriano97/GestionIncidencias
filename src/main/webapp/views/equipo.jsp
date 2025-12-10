@@ -8,6 +8,22 @@
     <title>Gestión de Equipos</title>
     <link rel="stylesheet" href="<c:url value='/css/main.css'/>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+.pagination {
+    list-style: none;
+    padding-left: 0;
+}
+.pagination .page-link {
+    border-radius: 8px;
+    margin: 0 4px;
+}
+.pagination .page-item::before {
+    content: none;
+}
+.error { color: red; font-size: 13px; }
+.ok { color: green; font-size: 13px; }
+</style>
+
 </head>
 <body>
 <div class="dashboard-container">
@@ -29,7 +45,8 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Código del Equipo</label>
-                        <input type="text" name="codigoEquipo" required value="${equipoEdit != null ? equipoEdit.codigoEquipo : ''}">
+                       <input type="text" name="codigoEquipo" id="codigoEquipo" required  onkeyup="validarCodigoEquipo()"  value="${equipoEdit != null ? equipoEdit.codigoEquipo : ''}">
+<span id="msgCodigo"></span>
                     </div>
                     <div class="form-group">
                         <label>Tipo</label>
@@ -91,12 +108,45 @@
             </tbody>
         </table>
 
-        <!-- Paginación centrada -->
-        <div class="pagination">
-            <c:forEach var="i" begin="1" end="${totalPaginas}">
-                <a href="<c:url value='/EquipoServlet?pagina=${i}&search=${search}'/>" 
-                   class="${i == paginaActual ? 'active' : ''}">${i}</a>
+       <!-- ================= PAGINACIÓN EQUIPO ================= -->
+<c:if test="${totalPaginas > 1}">
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center mt-3">
+
+            <!-- Anterior -->
+            <c:if test="${paginaActual > 1}">
+                <li class="page-item">
+                    <a class="page-link"
+                       href="<c:url value='/EquipoServlet?pagina=${paginaActual - 1}&search=${search}'/>">
+                        « Anterior
+                    </a>
+                </li>
+            </c:if>
+
+            <!-- Números -->
+            <c:forEach begin="1" end="${totalPaginas}" var="i">
+                <li class="page-item ${i == paginaActual ? 'active' : ''}">
+                    <a class="page-link"
+                       href="<c:url value='/EquipoServlet?pagina=${i}&search=${search}'/>">
+                        ${i}
+                    </a>
+                </li>
             </c:forEach>
+
+            <!-- Siguiente -->
+            <c:if test="${paginaActual < totalPaginas}">
+                <li class="page-item">
+                    <a class="page-link"
+                       href="<c:url value='/EquipoServlet?pagina=${paginaActual + 1}&search=${search}'/>">
+                        Siguiente »
+                    </a>
+                </li>
+            </c:if>
+
+        </ul>
+    </nav>
+</c:if>
+
         </div>
     </div>
 </div>
@@ -110,6 +160,45 @@
             row.style.display = row.innerText.toLowerCase().includes(filter) ? '' : 'none';
         });
     });
+</script>
+<script>
+function validarCodigoEquipo() {
+
+    const codigo = document.getElementById("codigoEquipo").value;
+    const msg = document.getElementById("msgCodigo");
+    const btn = document.querySelector(".btn-primary");
+    const idEquipo = document.querySelector("[name=idEquipo]").value;
+
+    if (codigo.trim() === "") {
+        msg.innerText = "";
+        btn.disabled = false;
+        return;
+    }
+
+    const params = new URLSearchParams({
+        codigoEquipo: codigo,
+        idEquipo: idEquipo
+    });
+
+    fetch("${pageContext.request.contextPath}/ValidarEquipoServlet?" + params)
+        .then(res => res.json())
+        .then(data => {
+            if (data.duplicado) {
+                msg.innerText = "❌ Código de equipo ya existe";
+                msg.className = "error";
+                btn.disabled = true;
+            } else {
+                msg.innerText = "✅ Código disponible";
+                msg.className = "ok";
+                btn.disabled = false;
+            }
+        })
+        .catch(() => {
+            msg.innerText = "⚠ Error al validar";
+            msg.className = "error";
+            btn.disabled = true;
+        });
+}
 </script>
 </body>
 </html>

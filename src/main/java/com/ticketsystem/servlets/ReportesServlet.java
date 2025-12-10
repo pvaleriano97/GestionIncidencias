@@ -27,12 +27,11 @@ public class ReportesServlet extends HttpServlet {
         IncidenciaDAO incidenciaDAO = new IncidenciaDAO();
         TecnicoDAO tecnicoDAO = new TecnicoDAO();
 
-        // Siempre enviar lista de técnicos
+        // Lista de técnicos siempre disponible en JSP
         List<Tecnico> tecnicos = tecnicoDAO.listar();
         request.setAttribute("tecnicos", tecnicos);
 
         switch (action) {
-
             case "historial":
                 List<Incidencia> historial = incidenciaDAO.obtenerHistorial();
                 request.setAttribute("historial", historial);
@@ -57,62 +56,50 @@ public class ReportesServlet extends HttpServlet {
     }
 
     // ===========================================================
-    //             PROCESA BÚSQUEDA Y EXPORTACIÓN
+    //                  PROCESA FILTROS
     // ===========================================================
-    private void procesarFiltros(HttpServletRequest request,
-                                 HttpServletResponse response,
-                                 IncidenciaDAO dao,
-                                 boolean exportar,
-                                 String... tipoExport) throws IOException, ServletException {
+   private void procesarFiltros(HttpServletRequest request,
+                             HttpServletResponse response,
+                             IncidenciaDAO dao,
+                             boolean exportar,
+                             String... tipoExport)
+        throws IOException, ServletException {
 
-        String inicio = request.getParameter("inicio");
-        String fin = request.getParameter("fin");
-        String estado = request.getParameter("estado");
-        String tecnico = request.getParameter("tecnico");
+    // Obtener parámetros
+    String inicio = request.getParameter("inicio");
+    String fin = request.getParameter("fin");
+    String estado = request.getParameter("estado");
+    String tecnico = request.getParameter("tecnico");
 
-        List<Incidencia> lista;
+    // Convertir tipos
+    Date fechaInicio = (inicio != null && !inicio.isEmpty()) ? Date.valueOf(inicio) : null;
+    Date fechaFin    = (fin != null && !fin.isEmpty()) ? Date.valueOf(fin) : null;
+    String estadoFil = (estado != null && !estado.isEmpty()) ? estado : null;
+    String tecnicoFil = (tecnico != null && !tecnico.isEmpty()) ? tecnico : null;
 
-        // ------------------------------
-        // Prioridad: fechas > estado > técnico > todo
-        // ------------------------------
-        if (inicio != null && !inicio.isEmpty() &&
-                fin != null && !fin.isEmpty()) {
-            lista = dao.obtenerPorRangoFechas(Date.valueOf(inicio), Date.valueOf(fin));
-        }
-        else if (estado != null && !estado.isEmpty()) {
-            lista = dao.obtenerPorEstado(estado);
-        }
-        else if (tecnico != null && !tecnico.isEmpty()) {
-            lista = dao.obtenerPorTecnico(Integer.parseInt(tecnico));
-        }
-        else {
-            lista = dao.obtenerHistorial();
-        }
+    // Buscar con filtros combinados
+    List<Incidencia> lista = dao.buscarConFiltros(
+            fechaInicio, fechaFin, estadoFil, tecnicoFil
+    );
 
-        // ===========================================================
-        //                       EXPORTAR
-        // ===========================================================
-        if (exportar) {
+    // EXPORTAR
+    if (exportar) {
+        response.reset();
 
-            response.reset(); // LIMPIA BUFFER (OBLIGATORIO)
-
-            // --- EXPORTAR A EXCEL ---
-            if (tipoExport[0].equals("excel")) {
-                new ExportarExcel().historial(lista, response);
-                return; // ❗ evita cargar JSP
-            }
-
-            // --- EXPORTAR A PDF ---
-            if (tipoExport[0].equals("pdf")) {
-                new ExportarPDF().historial(lista, response);
-                return;
-            }
+        if ("excel".equals(tipoExport[0])) {
+            new ExportarExcel().historial(lista, response);
+            return;
         }
 
-        // ===========================================================
-        //           MOSTRAR RESULTADOS EN EL JSP
-        // ===========================================================
-        request.setAttribute("historial", lista);
-        request.getRequestDispatcher("views/reportes.jsp").forward(request, response);
+        if ("pdf".equals(tipoExport[0])) {
+            new ExportarPDF().historial(lista, response);
+            return;
+        }
     }
-}
+
+    // Mostrar en JSP
+    request.setAttribute("historial", lista);
+    request.getRequestDispatcher("views/reportes.jsp").forward(request, response);
+}}
+
+

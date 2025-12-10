@@ -147,5 +147,24 @@ public class EquipoDAO implements IEquipoDAO {
         }
         return lista;
     }
+    public boolean existeCodigoEquipo(String codigo, int idEquipo) {
+
+    String sql = "SELECT COUNT(*) FROM equipo WHERE codigoEquipo = ? AND idEquipo <> ?";
+
+    try (Connection cn = DatabaseConnection.getConnection();
+         PreparedStatement ps = cn.prepareStatement(sql)) {
+
+        ps.setString(1, codigo);
+        ps.setInt(2, idEquipo);
+
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1) > 0;
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return false;
+}
 }
 

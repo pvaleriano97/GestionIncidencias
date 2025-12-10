@@ -651,6 +651,7 @@ table tbody tr:hover {
     gap: 4px;
     margin: 15px 0;
     flex-wrap: wrap;
+     list-style: none !important;
 }
 
 .pagination a {
@@ -675,7 +676,13 @@ table tbody tr:hover {
     color: white;
     border-color: #6a11cb;
 }
+.pagination li::before {
+    content: none !important;
+}
 
+.pagination .page-item {
+    list-style: none !important;
+}
 /* ==============================
    Responsive
 ============================== */

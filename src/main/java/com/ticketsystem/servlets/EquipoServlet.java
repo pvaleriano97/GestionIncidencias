@@ -86,7 +86,7 @@ public class EquipoServlet extends HttpServlet {
 
         try {
             int pagina = 1;
-            int registrosPorPagina = 5;
+            int registrosPorPagina = 10;
             String search = request.getParameter("search");
             if (search == null) search = "";
 

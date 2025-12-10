@@ -16,39 +16,46 @@ public class IncidenciaDAO {
     // ============================================================
     //  MÉTODOS PARA LISTAR CON BÚSQUEDA + PAGINACIÓN (DASHBOARD ADMIN)
     // ============================================================
-    public List<Incidencia> listar(String search, int offset, int limit) {
-        List<Incidencia> lista = new ArrayList<>();
+   public List<Incidencia> listar(String search, int pagina, int limit) {
+    List<Incidencia> lista = new ArrayList<>();
 
-        String sql = "SELECT i.idIncidencia, i.descripcion, i.estado, i.idUsuario, i.idEquipo, i.idTecnico, i.fechaRegistro, " +
-                "u.nombre AS nombreUsuario, " +
-                "e.codigoEquipo, e.tipo AS tipoEquipo, " +
-                "t.nombre AS nombreTecnico " +
-                "FROM incidencia i " +
-                "LEFT JOIN usuario u ON i.idUsuario = u.idUsuario " +
-                "LEFT JOIN equipo e ON i.idEquipo = e.idEquipo " +
-                "LEFT JOIN tecnico t ON i.idTecnico = t.idTecnico " +
-                "WHERE i.descripcion LIKE ? OR i.estado LIKE ? OR u.nombre LIKE ? " +
-                "OR e.codigoEquipo LIKE ? OR e.tipo LIKE ? OR t.nombre LIKE ? " +
-                "ORDER BY i.fechaRegistro DESC " +
-                "LIMIT ? OFFSET ?";
+    int offset = (pagina - 1) * limit;
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+    String sql = "SELECT i.idIncidencia, i.descripcion, i.estado, i.idUsuario, i.idEquipo, i.idTecnico, i.fechaRegistro, " +
+            "u.nombre AS nombreUsuario, " +
+            "e.codigoEquipo, e.tipo AS tipoEquipo, " +
+            "t.nombre AS nombreTecnico " +
+            "FROM incidencia i " +
+            "LEFT JOIN usuario u ON i.idUsuario = u.idUsuario " +
+            "LEFT JOIN equipo e ON i.idEquipo = e.idEquipo " +
+            "LEFT JOIN tecnico t ON i.idTecnico = t.idTecnico " +
+            "WHERE i.descripcion LIKE ? OR i.estado LIKE ? OR u.nombre LIKE ? " +
+            "OR e.codigoEquipo LIKE ? OR e.tipo LIKE ? OR t.nombre LIKE ? " +
+            "ORDER BY i.fechaRegistro DESC " +
+            "LIMIT ? OFFSET ?";
 
-            String filtro = "%" + search + "%";
-            for (int i = 1; i <= 6; i++) ps.setString(i, filtro);
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(7, limit);
-            ps.setInt(8, offset);
-
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) lista.add(mapearIncidencia(rs));
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+        String filtro = "%" + search + "%";
+        for (int i = 1; i <= 6; i++) {
+            ps.setString(i, filtro);
         }
-        return lista;
+
+        ps.setInt(7, limit);
+        ps.setInt(8, offset);
+
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            lista.add(mapearIncidencia(rs));
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+
+    return lista;
+}
 
     // Contar registros para paginación
     public int contarRegistros(String search) {
@@ -722,6 +729,118 @@ public class IncidenciaDAO {
 
         return 0;
     }
+  public List<Incidencia> buscarConFiltros(Date inicio, Date fin, String estado, String tecnico) {
+
+    String sql = "SELECT i.*, " +
+            "u.nombre AS nombreUsuario, " +
+            "e.codigoEquipo AS codigoEquipo, " +
+            "e.tipo AS tipoEquipo, " +     // <--- AGREGAR
+            "t.nombre AS nombreTecnico " +
+            "FROM incidencia i " +
+            "LEFT JOIN usuario u ON i.idUsuario = u.idUsuario " +
+            "LEFT JOIN equipo e ON i.idEquipo = e.idEquipo " +
+            "LEFT JOIN tecnico t ON i.idTecnico = t.idTecnico " +
+            "WHERE 1=1";
+
+    List<Object> params = new ArrayList<>();
+
+    if (inicio != null) {
+        sql += " AND i.fechaRegistro >= ?";
+        params.add(inicio);
+    }
+
+    if (fin != null) {
+        sql += " AND i.fechaRegistro <= ?";
+        params.add(fin);
+    }
+
+    if (estado != null) {
+        sql += " AND i.estado = ?";
+        params.add(estado);
+    }
+
+    if (tecnico != null) {
+        sql += " AND i.idTecnico = ?";
+        params.add(Integer.parseInt(tecnico));
+    }
+
+    List<Incidencia> lista = new ArrayList<>();
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        for (int i = 0; i < params.size(); i++) {
+            ps.setObject(i + 1, params.get(i));
+        }
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            Incidencia h = new Incidencia();
+
+            h.setIdIncidencia(rs.getInt("idIncidencia"));
+            h.setFechaRegistro(rs.getTimestamp("fechaRegistro"));
+            h.setDescripcion(rs.getString("descripcion"));
+            h.setEstado(rs.getString("estado"));
+
+            h.setNombreUsuario(rs.getString("nombreUsuario"));
+            h.setCodigoEquipo(rs.getString("codigoEquipo"));
+            h.setTipoEquipo(rs.getString("tipoEquipo"));
+            h.setNombreTecnico(rs.getString("nombreTecnico"));
+
+            lista.add(h);
+        }
+
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+
+    return lista;
+}
+public boolean existeIncidenciaConDescripcion(String descripcion) {
+    String sql = "SELECT COUNT(*) FROM incidencia WHERE descripcion = ?";
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setString(1, descripcion);
+
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return false;
+}
+public Incidencia obtenerUltimaIncidencia() {
+
+    String sql = "SELECT * FROM incidencia ORDER BY idIncidencia DESC LIMIT 1";
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+
+        if (rs.next()) {
+            Incidencia inc = new Incidencia();
+            inc.setIdIncidencia(rs.getInt("idIncidencia"));
+            inc.setDescripcion(rs.getString("descripcion"));
+            inc.setEstado(rs.getString("estado"));
+            inc.setFechaRegistro(rs.getTimestamp("fechaRegistro"));
+            inc.setIdUsuario(rs.getInt("idUsuario"));
+            inc.setIdEquipo(rs.getInt("idEquipo"));
+            inc.setIdTecnico((Integer) rs.getObject("idTecnico"));
+            return inc;
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return null;
+}
+
 }
 
 

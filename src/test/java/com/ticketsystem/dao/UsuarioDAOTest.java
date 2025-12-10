@@ -3,6 +3,7 @@ package com.ticketsystem.dao;
 import com.ticketsystem.model.Usuario;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,9 +14,9 @@ public class UsuarioDAOTest {
     @Test
     @DisplayName("Login correcto con credenciales válidas")
     void testLoginCorrecto() throws Exception {
-        Usuario u = usuarioDAO.autenticar("jean.rubio@bcp.com.pe", "@B123");
+        Usuario u = usuarioDAO.autenticar("srous3002@gmail.com", "Empresa1");
         assertNotNull(u, "El usuario no debería ser null para credenciales válidas");
-        assertEquals("jean.rubio@bcp.com.pe", u.getCorreo());
+        assertEquals("srous3002@gmail.com", u.getCorreo());
     }
 
     @Test
@@ -28,7 +29,7 @@ public class UsuarioDAOTest {
     @Test
     @DisplayName("Login con contraseña incorrecta")
     void testLoginConPasswordIncorrecto() throws Exception {
-        Usuario u = usuarioDAO.autenticar("jean.rubio@bcp.com.pe", "clave-incorrecta");
+        Usuario u = usuarioDAO.autenticar("srous3002@gmail.com", "clave-incorrecta");
         assertNull(u, "Debe ser null con contraseña incorrecta");
     }
 

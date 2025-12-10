@@ -1,51 +1,39 @@
 package com.ticketsystem.servlets;
 
 import com.ticketsystem.dao.UsuarioDAO;
-import com.ticketsystem.dao.IUsuarioDAO;
 import com.ticketsystem.model.Usuario;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "UsuarioServlet", urlPatterns = {"/UsuarioServlet"})
+@WebServlet("/UsuarioServlet")
 public class UsuarioServlet extends HttpServlet {
 
-    private final IUsuarioDAO usuarioDAO = new UsuarioDAO();
+    private UsuarioDAO usuarioDAO = new UsuarioDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String action = request.getParameter("action");
-        if (action == null) action = "listar";
+        String search = request.getParameter("search") != null ? request.getParameter("search") : "";
 
-        try {
-            switch (action) {
-                case "edit":
-                    int idEdit = Integer.parseInt(request.getParameter("id"));
-                    Usuario usuarioEdit = usuarioDAO.buscarPorId(idEdit);
-                    request.setAttribute("usuarioEdit", usuarioEdit);
-                    listarUsuarios(request, response);
-                    break;
+        if (action == null) action = "";
 
-                case "delete":
-                    int idDel = Integer.parseInt(request.getParameter("id"));
-                    usuarioDAO.eliminar(idDel);
-                    listarUsuarios(request, response);
-                    break;
-
-                default:
-                    listarUsuarios(request, response);
-                    break;
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            request.setAttribute("error", ex.getMessage());
-            request.getRequestDispatcher("/views/error.jsp").forward(request, response);
+        switch (action) {
+            case "edit":
+                editarUsuario(request, response);
+                return;
+            case "delete":
+                eliminarUsuario(request, response);
+                return;
+            default:
+                listarUsuarios(request, response, search);
         }
     }
 
@@ -53,67 +41,172 @@ public class UsuarioServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        request.setCharacterEncoding("UTF-8");
         String idUsuarioStr = request.getParameter("idUsuario");
 
-        try {
-            Usuario usuario = new Usuario();
-            usuario.setNombre(request.getParameter("nombre"));
-            usuario.setApellido(request.getParameter("apellido"));
-            usuario.setCorreo(request.getParameter("correo"));
-            usuario.setContrasena(request.getParameter("contrasena")); // 🔒 Nuevo campo
-            usuario.setRol(request.getParameter("rol"));
-            usuario.setArea(request.getParameter("area")); // 🏢 Nuevo campo
-
-            if (idUsuarioStr == null || idUsuarioStr.isEmpty()) {
-                usuarioDAO.insertar(usuario);
-            } else {
-                usuario.setIdUsuario(Integer.parseInt(idUsuarioStr));
-                usuarioDAO.actualizar(usuario);
-            }
-
-            listarUsuarios(request, response);
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            request.setAttribute("error", ex.getMessage());
-            request.getRequestDispatcher("/views/error.jsp").forward(request, response);
+        if (idUsuarioStr == null || idUsuarioStr.isEmpty()) {
+            guardarUsuario(request, response);
+        } else {
+            actualizarUsuario(request, response);
         }
     }
 
-    private void listarUsuarios(HttpServletRequest request, HttpServletResponse response)
+    // ============================================================
+    // LISTAR + PAGINAR
+    // ============================================================
+    private void listarUsuarios(HttpServletRequest request, HttpServletResponse response, String search)
             throws ServletException, IOException {
 
+        int paginaActual = 1;
+        int registrosPorPagina = 8;
+
+        if (request.getParameter("pagina") != null) {
+            paginaActual = Integer.parseInt(request.getParameter("pagina"));
+        }
+
+        // 🔥 Corrección: page = paginaActual, size = registrosPorPagina
+        List<Usuario> lista = usuarioDAO.listar(paginaActual, registrosPorPagina, search);
+        int totalRegistros = usuarioDAO.contar(search);
+        int totalPaginas = (int) Math.ceil((double) totalRegistros / registrosPorPagina);
+
+        request.setAttribute("listaUsuarios", lista);
+        request.setAttribute("paginaActual", paginaActual);
+        request.setAttribute("totalPaginas", totalPaginas);
+        request.setAttribute("search", search);
+
+        request.getRequestDispatcher("/views/usuario.jsp").forward(request, response);
+    }
+
+    // ============================================================
+    // EDITAR
+    // ============================================================
+    private void editarUsuario(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        int id = Integer.parseInt(request.getParameter("id"));
+
         try {
-            int pagina = 1;
-            int registrosPorPagina = 5;
-            String search = request.getParameter("search");
-            if (search == null) search = "";
-
-            if (request.getParameter("pagina") != null) {
-                pagina = Integer.parseInt(request.getParameter("pagina"));
-            }
-
-            List<Usuario> listaUsuarios = usuarioDAO.listar(pagina, registrosPorPagina, search);
-            int totalRegistros = usuarioDAO.contar(search);
-            int totalPaginas = (int) Math.ceil(totalRegistros / (double) registrosPorPagina);
-
-            request.setAttribute("listaUsuarios", listaUsuarios);
-            request.setAttribute("paginaActual", pagina);
-            request.setAttribute("totalPaginas", totalPaginas);
-            request.setAttribute("search", search);
-
-            request.getRequestDispatcher("/views/usuario.jsp").forward(request, response);
+            Usuario usuario = usuarioDAO.buscarPorId(id);
+            request.setAttribute("usuarioEdit", usuario);
 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", e.getMessage());
-            request.getRequestDispatcher("/views/error.jsp").forward(request, response);
+            request.setAttribute("error", "No se pudo cargar el usuario");
         }
+
+        listarUsuarios(request, response, "");
     }
 
-    @Override
-    public String getServletInfo() {
-        return "Servlet para gestión de Usuarios (con contraseña y área) con JSP y paginación";
+    // ============================================================
+    // GUARDAR
+    // ============================================================
+    private void guardarUsuario(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        Usuario u = new Usuario();
+
+        u.setNombre(request.getParameter("nombre"));
+        u.setApellido(request.getParameter("apellido"));
+        u.setCorreo(request.getParameter("correo"));
+        u.setContrasena(request.getParameter("contrasena")); // DAO ya aplica SHA-256
+        u.setArea(request.getParameter("area"));
+        u.setRol(request.getParameter("rol"));
+
+        try {
+            boolean guardado = usuarioDAO.insertar(u);
+
+            if (guardado) {
+                request.setAttribute("success", "Usuario guardado correctamente");
+            } else {
+                request.setAttribute("error", "No se pudo guardar el usuario");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Error al guardar usuario");
+        }
+
+        listarUsuarios(request, response, "");
+    }
+
+    // ============================================================
+    // ACTUALIZAR
+    // ============================================================
+    private void actualizarUsuario(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        try {
+
+            int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+            Usuario original = usuarioDAO.buscarPorId(idUsuario);
+
+            if (original == null) {
+                request.setAttribute("error", "Usuario no encontrado");
+                listarUsuarios(request, response, "");
+                return;
+            }
+
+            String nuevaPass = request.getParameter("contrasena");
+
+            // NO permitir cambiar pass del admin
+            if ("admin".equalsIgnoreCase(original.getRol())) {
+                if (nuevaPass != null && !nuevaPass.isEmpty()) {
+                    request.setAttribute("error", "No se puede cambiar la contraseña del administrador");
+                    listarUsuarios(request, response, "");
+                    return;
+                }
+            }
+
+            // Actualizar datos
+            original.setNombre(request.getParameter("nombre"));
+            original.setApellido(request.getParameter("apellido"));
+            original.setCorreo(request.getParameter("correo"));
+            original.setArea(request.getParameter("area"));
+            original.setRol(request.getParameter("rol"));
+
+            // Solo actualiza la contraseña si NO es admin
+            if (!"admin".equalsIgnoreCase(original.getRol())) {
+                if (nuevaPass != null && !nuevaPass.isEmpty()) {
+                    original.setContrasena(nuevaPass);
+                }
+            }
+
+            boolean actualizado = usuarioDAO.actualizar(original);
+
+            if (actualizado) {
+                request.setAttribute("success", "Usuario actualizado correctamente");
+            } else {
+                request.setAttribute("error", "No se pudo actualizar el usuario");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Error al actualizar usuario");
+        }
+
+        listarUsuarios(request, response, "");
+    }
+
+    // ============================================================
+    // ELIMINAR
+    // ============================================================
+    private void eliminarUsuario(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
+            boolean ok = usuarioDAO.eliminar(id);
+
+            if (ok) {
+                request.setAttribute("success", "Usuario eliminado correctamente");
+            } else {
+                request.setAttribute("error", "No se pudo eliminar el usuario");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Error eliminando usuario");
+        }
+
+        listarUsuarios(request, response, "");
     }
 }

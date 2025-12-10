@@ -1,21 +1,27 @@
 package com.ticketsystem.servlets;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import java.io.IOException;
+import javax.servlet.annotation.WebServlet;
+
 
 public class LogoutServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws IOException {
 
         HttpSession session = request.getSession(false);
         if (session != null) {
-            session.invalidate(); // ⚡ Cierra la sesión
+            session.invalidate();
         }
 
-        // Redirige al login con mensaje de éxito
-        response.sendRedirect(request.getContextPath() + "/LoginServlet?logout=success");
+        response.sendRedirect(request.getContextPath() + "/views/login.jsp");
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        doGet(request, response); // reutiliza lógica
     }
 }

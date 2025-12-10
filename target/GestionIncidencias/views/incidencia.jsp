@@ -25,6 +25,17 @@
         .toast.hide { opacity: 0; transform: translateY(-20px); }
         .toast.error { background: #ff4d4d; }
         .toast.success { background: #28a745; }
+        .pagination {
+    list-style: none;
+    padding-left: 0;
+}
+.pagination .page-link {
+    border-radius: 8px;
+    margin: 0 4px;
+}
+.pagination .page-item::before {
+    content: none;
+}
     </style>
 </head>
 <body>
@@ -168,11 +179,44 @@
 
         <!-- PAGINACIÓN -->
         <div class="pagination">
-            <c:forEach var="i" begin="1" end="${totalPaginas}">
-                <a href="<c:url value='/IncidenciaServlet?pagina=${i}&search=${search}'/>" class="${i == paginaActual ? 'active' : ''}">
-                    ${i}
-                </a>
+          <!-- ================= PAGINACIÓN INCIDENCIA ================= -->
+<c:if test="${totalPaginas > 1}">
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center mt-3">
+
+            <!-- Anterior -->
+            <c:if test="${paginaActual > 1}">
+                <li class="page-item">
+                    <a class="page-link"
+                       href="<c:url value='/IncidenciaServlet?pagina=${paginaActual - 1}&search=${search}'/>">
+                        « Anterior
+                    </a>
+                </li>
+            </c:if>
+
+            <!-- Números -->
+            <c:forEach begin="1" end="${totalPaginas}" var="i">
+                <li class="page-item ${i == paginaActual ? 'active' : ''}">
+                    <a class="page-link"
+                       href="<c:url value='/IncidenciaServlet?pagina=${i}&search=${search}'/>">
+                        ${i}
+                    </a>
+                </li>
             </c:forEach>
+
+            <!-- Siguiente -->
+            <c:if test="${paginaActual < totalPaginas}">
+                <li class="page-item">
+                    <a class="page-link"
+                       href="<c:url value='/IncidenciaServlet?pagina=${paginaActual + 1}&search=${search}'/>">
+                        Siguiente »
+                    </a>
+                </li>
+            </c:if>
+
+        </ul>
+    </nav>
+</c:if>
         </div>
     </div>
 </div>
